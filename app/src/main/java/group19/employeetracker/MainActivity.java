@@ -10,6 +10,8 @@ public class MainActivity extends AppCompatActivity
 {
 
     private Button debugCameraButton;
+    private Button debugProfileButton;
+    private Button debugMapButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -22,7 +24,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Initializes the buttons and intents necessary for testing and debugging.
-     *
+     * @author John Sermarini
      */
     void debugInit()
     {
@@ -31,8 +33,28 @@ public class MainActivity extends AppCompatActivity
         {
             public void onClick(View v)
             {
-                Intent toOptions = new Intent(MainActivity.this, Camera.class);
-                startActivity(toOptions);
+                Intent toCamera = new Intent(MainActivity.this, Camera.class);
+                startActivity(toCamera);
+            }
+        });
+
+        debugProfileButton = (Button) findViewById(R.id.debugProfileButton);
+        debugProfileButton.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                Intent toProfile = new Intent(MainActivity.this, Profile.class);
+                startActivity(toProfile);
+            }
+        });
+
+        debugMapButton = (Button) findViewById(R.id.debugMapButton);
+        debugMapButton.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                Intent toMap = new Intent(MainActivity.this, Map.class);
+                startActivity(toMap);
             }
         });
     }

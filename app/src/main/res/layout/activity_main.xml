@@ -10,20 +10,42 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="group19.employeetracker.MainActivity">
 
+    <Button
+        android:text="To Test Profile..."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:id="@+id/debugProfileButton"
+        android:layout_below="@+id/debugCameraButton"
+        android:layout_alignLeft="@+id/debugCameraButton"
+        android:layout_alignStart="@+id/debugCameraButton" />
+
+    <Button
+        android:text="To Map..."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:id="@+id/debugMapButton"
+        android:layout_below="@+id/debugProfileButton"
+        android:layout_alignLeft="@+id/debugProfileButton"
+        android:layout_alignStart="@+id/debugProfileButton" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="Debug Menu"
+        android:textSize="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:text="To Camera..."
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
+        android:id="@+id/debugCameraButton"
+        android:layout_below="@+id/textView3"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="18dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="32dp"
-        android:id="@+id/debugCameraButton" />
+        android:layout_marginTop="78dp" />
+
 </RelativeLayout>
