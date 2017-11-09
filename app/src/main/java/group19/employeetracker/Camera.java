@@ -52,7 +52,7 @@ public class Camera extends AppCompatActivity
                 {
                     sendPicture();
 
-                    Intent toOptions = new Intent(Camera.this, Map.class);
+                    Intent toOptions = new Intent(Camera.this, MapsActivity.class);
                     startActivity(toOptions);
                 }
                 else

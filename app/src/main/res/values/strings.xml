@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Employee Tracker</string>
-    <string name="title_activity_map">Map</string>
+    <string name="title_activity_maps">Employee Tracker</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

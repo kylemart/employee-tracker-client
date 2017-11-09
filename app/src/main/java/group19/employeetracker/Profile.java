@@ -15,11 +15,20 @@ public class Profile extends AppCompatActivity
     private int employeeID;
     private boolean publicEmployee;
 
+    User user;
+    Employee employee;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        // TODO: Use this to find out if the user is admin or employee and add special admin buttons
+        user = getIntent().getParcelableExtra("user");
+
+        // TODO: Don't need to get stuff from server, here is the employee
+        employee = getIntent().getParcelableExtra("employee");
 
         connectionSuccessful = retrieveData();
 

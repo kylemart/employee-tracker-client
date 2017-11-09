@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity
         {
             public void onClick(View v)
             {
-                Intent toMap = new Intent(MainActivity.this, Map.class);
+                Intent toMap = new Intent(MainActivity.this, MapsActivity.class);
                 startActivity(toMap);
             }
         });
