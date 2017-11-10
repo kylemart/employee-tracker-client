@@ -14,9 +14,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -90,8 +92,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        createSearchListener();
 
         final Intent intent = new Intent(this, BackgroundGPS.class);
         startService(intent);
@@ -302,27 +302,10 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
         return filteredEmployees;
     }
 
-    private void createSearchListener() {
-        /* TODO: Implement Searching. Maybe with this, idk
-        SearchView searchView = (SearchView) findItem(R.id.action_search).getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                search(query);
-                return true;
-            }
+    private void search(String query) {
+        // TODO: Implement Searching. Maybe with this, idk
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                search(newText);
-                return true;
-            }
-
-            public void search(String query) {
-
-
-            }
-        });*/
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng()));
     }
 
     @Override
@@ -377,6 +360,24 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        MenuItem search = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                search(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                search(newText);
+                return true;
+            }
+        });
+
         return true;
     }
 

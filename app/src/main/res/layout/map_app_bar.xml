@@ -20,12 +20,12 @@
             android:weightSum="1"
             app:contentInsetStartWithNavigation="0dp">
 
-            <SearchView
+            <!--<SearchView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:iconifiedByDefault="false"
                 android:searchIcon="@null"
-                android:queryHint="Find an Employee" />
+                android:queryHint="Find an Employee" />-->
 
         </android.support.v7.widget.Toolbar>
 
