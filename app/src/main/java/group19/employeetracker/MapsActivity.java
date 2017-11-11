@@ -63,19 +63,25 @@ class FilteredMarkers {
 public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoWindowClickListener, OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
     private GoogleMap mMap;
 
+    // The user currently using the app
     private User user;
 
     // The employees visible to the user
     private HashSet<Employee> employees;
 
-    // The groups that the visible employees are part of
+    // The groups that the employees are part of
     private HashSet<String> groups;
+
     // The groups shown on the map
     private HashSet<String> activeGroups = new HashSet<>();
 
+    // Current set of markers drawn to map
     private HashSet<Marker> markers = new HashSet<>();
+
+    // Set of markers found in a search
     private FilteredMarkers filteredMarkers;
 
+    // Helps with orientation changes
     private boolean reloaded = false;
     private CameraPosition savedView;
 
@@ -131,10 +137,11 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         View navHeader = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
         Button logout = (Button) navHeader.findViewById(R.id.logout);
 
-        // TODO: Also return user to login page
         logout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 stopService(intent);
+
+                finish();
             }
         });
     }
