@@ -39,6 +39,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_menu_rotate" />
+        app:srcCompat="@drawable/ic_refresh_white_48dp" />
 
 </android.support.design.widget.CoordinatorLayout>

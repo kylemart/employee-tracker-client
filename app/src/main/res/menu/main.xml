@@ -9,6 +9,12 @@
 
     <item android:id="@+id/action_search"
         android:title = "Search"
+        android:icon="@drawable/ic_search_white_24dp"
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView" />
+
+    <item android:id="@+id/action_next"
+        android:title = "Next"
+        android:icon="@drawable/ic_keyboard_arrow_right_white_48dp"
+        app:showAsAction="always" />
 </menu>

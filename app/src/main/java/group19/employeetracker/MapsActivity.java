@@ -33,14 +33,34 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
+class FilteredMarkers {
+    private ArrayList<Marker> filteredMarkers;
+    private int size;
+    private int nextIndex = 0;
+
+    FilteredMarkers(ArrayList<Marker> filteredMarkers) {
+        this.filteredMarkers = filteredMarkers;
+        this.size = filteredMarkers.size();
+    }
+
+    public Marker getNext() {
+        if(size == 0)
+            return null;
+
+        return filteredMarkers.get((nextIndex++) % size);
+    }
+}
+
 @SuppressWarnings("MissingPermission")
-public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
+public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoWindowClickListener, OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
     private GoogleMap mMap;
 
     private User user;
@@ -50,9 +70,14 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
 
     // The groups that the visible employees are part of
     private HashSet<String> groups;
-
     // The groups shown on the map
     private HashSet<String> activeGroups = new HashSet<>();
+
+    private HashSet<Marker> markers = new HashSet<>();
+    private FilteredMarkers filteredMarkers;
+
+    private boolean reloaded = false;
+    private CameraPosition savedView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +87,17 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
         // TODO: Uncomment when linked with login page and intent passes the user along
         //user = getIntent().getParcelableExtra("user");
 
+        if (savedInstanceState != null) {
+            reloaded = true;
+            savedView = savedInstanceState.getParcelable("view");
+
+            activeGroups = (HashSet<String>) savedInstanceState.getSerializable("activeGroups");
+        }
+
         employees = getEmployees();
         groups = findGroups();
 
-        // This permission logic needs to be on the login page
+        // TODO: This permission logic needs to be on the login page
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             if(!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION))
                 ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 34);
@@ -128,17 +160,12 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
 
         check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                HashSet<String> activeGroup = new HashSet<>();
-                activeGroup.add(group);
-
-                if (isChecked) {
-                    populateMap(filter(employees, activeGroup));
-                } else {
-                    mMap.clear();
+                if (isChecked)
+                    activeGroups.add(group);
+                else
                     activeGroups.remove(group);
 
-                    populateMap(filter(employees, activeGroups));
-                }
+                populateMap(filter(employees, activeGroups));
 
                 // Uncheck checkAll checkbox if at least one checkbox is unchecked
                 // Or, check checkAll checkbox if all checkboxes are checked
@@ -149,22 +176,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
                 check.setOnCheckedChangeListener(null);
                 check.setChecked(activeGroups.size() == groups.size());
                 check.setOnCheckedChangeListener(checkAllListener());
-
-                // TODO: Probably deleting this in favor of above code. Not enough testing has been done
-                /* Uncheck checkAll checkbox if all checkboxes are unchecked
-                   Or, check checkAll checkbox if all checkboxes are checked
-                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-                SubMenu menu = navigationView.getMenu().getItem(1).getSubMenu();
-
-                for (int i = 0; i < groups.size(); i++) {
-                    CheckBox check = (CheckBox) menu.getItem(i).getActionView();
-
-                    if(check.isChecked() == !isChecked)
-                        return;
-                }
-
-                CheckBox check = (CheckBox)navigationView.getMenu().getItem(0).getActionView();
-                check.setChecked(isChecked);*/
             }
         });
 
@@ -231,11 +242,10 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
 
     // TODO: Remove temp data when DatabaseIO is working
     private void updateEmployees() {
-        employees = new HashSet<>();
+        employees = getEmployees();
 
-        Bitmap pic = BitmapFactory.decodeResource(this.getResources(), R.drawable.a);
-
-        employees.add(new Employee("Test", "New Group", new LatLng(28.604279, -81.200189), pic));
+        Bitmap pic = BitmapFactory.decodeResource(this.getResources(), R.drawable.c);
+        employees.add(new Employee("Ryan Graves", "New Group", new LatLng(28.604279, -81.200189), pic));
 
         groups = findGroups();
 
@@ -250,7 +260,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
 
         createNavView();
 
-        mMap.clear();
         populateMap(filter(employees, activeGroups));
     }
 
@@ -273,6 +282,9 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
     }
 
     private void populateMap(HashSet<Employee> employees) {
+        mMap.clear();
+        markers.clear();
+
         Marker marker;
 
         for(Employee employee : employees) {
@@ -282,6 +294,8 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
                     .title(employee.fullName)
                     .icon(BitmapDescriptorFactory.fromBitmap(pic)));
             marker.setTag(employee);
+
+            markers.add(marker);
         }
     }
 
@@ -289,23 +303,38 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
         HashSet<Employee> filteredEmployees = new HashSet<>();
 
         for(Employee employee : employees)
-            for(String j : selectedGroups) {
-                if(!activeGroups.contains(j))
-                    activeGroups.add(j);
-
-                if(employee.group.contains(j)) {
+            for (String group : employee.group)
+                if (selectedGroups.contains(group)) {
                     filteredEmployees.add(employee);
                     break;
                 }
-            }
 
         return filteredEmployees;
     }
 
-    private void search(String query) {
-        // TODO: Implement Searching. Maybe with this, idk
+    private ArrayList<Marker> search(String query) {
+        ArrayList<Marker> filteredMarkers = new ArrayList<>();
 
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng()));
+        if(query.isEmpty() || markers == null)
+            return filteredMarkers;
+
+        for(Marker marker : markers)
+            if(marker.getTitle().toLowerCase().contains(query.toLowerCase()))
+                filteredMarkers.add(marker);
+
+        return filteredMarkers;
+    }
+
+    private void getNextMarker() {
+        if(filteredMarkers == null)
+            return;
+
+        Marker marker = filteredMarkers.getNext();
+
+        if(marker != null) {
+            marker.showInfoWindow();
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+        }
     }
 
     @Override
@@ -314,16 +343,22 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
 
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(getUserCoords()));
+
+            if(!reloaded)
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(getUserCoords()));
+            else
+                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(savedView));
         }
 
         mMap.moveCamera(CameraUpdateFactory.zoomTo(17));
-        mMap.setOnMarkerClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
+
+        populateMap(filter(employees, activeGroups));
     }
 
     // Sends the employee that was clicked on to the profile activity
     @Override
-    public boolean onMarkerClick(final Marker marker) {
+    public void onInfoWindowClick(Marker marker) {
         Employee employee = (Employee) marker.getTag();
 
         Intent intent = new Intent(this, Profile.class);
@@ -331,8 +366,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
         intent.putExtra("employee", employee);
 
         startActivity(intent);
-
-        return false;
     }
 
     // TODO: Move this to the login page of the app
@@ -358,22 +391,27 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
         MenuItem search = menu.findItem(R.id.action_search);
+
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        searchView.setMaxWidth(4000);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                search(query);
+                filteredMarkers = new FilteredMarkers(search(query));
+                getNextMarker();
+
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                search(newText);
+                filteredMarkers = new FilteredMarkers(search(newText));
+                getNextMarker();
+
                 return true;
             }
         });
@@ -383,15 +421,12 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings)
             return true;
-        }
+        else if(id == R.id.action_next)
+            getNextMarker();
 
         return super.onOptionsItemSelected(item);
     }
@@ -413,5 +448,19 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
         checkBox.setChecked(!checkBox.isChecked());
 
         return true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        /* TOO LARGE TO SEND
+        ArrayList<Parcelable> pEmployees = new ArrayList<>();
+        pEmployees.addAll(employees);
+
+        savedInstanceState.putParcelableArrayList("employees", pEmployees);*/
+
+        savedInstanceState.putSerializable("activeGroups", activeGroups);
+        savedInstanceState.putParcelable("view", mMap.getCameraPosition());
+
+        super.onSaveInstanceState(savedInstanceState);
     }
 }
