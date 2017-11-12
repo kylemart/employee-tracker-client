@@ -1,5 +1,7 @@
 package group19.employeetracker;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +22,22 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         debugInit();
+
+        if(isLoggedIn()) {
+            Intent toMap = new Intent(MainActivity.this, MapsActivity.class);
+            startActivity(toMap);
+        }
+    }
+
+    // TODO: Use this in final login page to skip logging in if already logged in
+    private boolean isLoggedIn() {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+            if (BackgroundGPS.class.getName().equals(service.service.getClassName()))
+                return true;
+
+        return false;
     }
 
     /**
