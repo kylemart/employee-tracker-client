@@ -7,6 +7,8 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -37,12 +39,14 @@
         <activity android:name=".Camera" />
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
-        </activity>
-        <activity android:name=".Profile"></activity>
+            android:label="@string/title_activity_maps"></activity>
+        <activity android:name=".Profile" />
+
         <service
             android:name=".BackgroundGPS"
-            android:exported="false"/>
+            android:exported="false" />
+
+        <activity android:name=".DatabaseIO"></activity>
     </application>
 
 </manifest>

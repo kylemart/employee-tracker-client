@@ -48,4 +48,14 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="78dp" />
 
+    <Button
+        android:text="To DatabaseIO..."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:id="@+id/debugDButton"
+        android:layout_below="@+id/debugMapButton"
+        android:layout_alignLeft="@+id/debugMapButton"
+        android:layout_alignStart="@+id/debugMapButton" />
+
 </RelativeLayout>

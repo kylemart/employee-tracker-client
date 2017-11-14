@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity
     private Button debugCameraButton;
     private Button debugProfileButton;
     private Button debugMapButton;
+    private Button debugDButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -73,6 +74,16 @@ public class MainActivity extends AppCompatActivity
             {
                 Intent toMap = new Intent(MainActivity.this, MapsActivity.class);
                 startActivity(toMap);
+            }
+        });
+
+        debugDButton = (Button) findViewById(R.id.debugDButton);
+        debugDButton.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                Intent toD = new Intent(MainActivity.this, DatabaseIO.class);
+                startActivity(toD);
             }
         });
     }
