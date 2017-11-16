@@ -17,4 +17,9 @@
         android:title = "Next"
         android:icon="@drawable/ic_keyboard_arrow_right_white_48dp"
         app:showAsAction="always" />
+
+    <item android:id="@+id/action_refresh"
+        android:title = "Refresh"
+        android:icon="@drawable/ic_refresh_white_24dp"
+        app:showAsAction="always" />
 </menu>
