@@ -28,6 +28,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -108,6 +113,8 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
     // Helps with orientation changes
     private boolean reloaded = false;
     private CameraPosition savedView;
+
+    private boolean nextVisibility = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -371,6 +378,21 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
 
+            LocationCallback mLocationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    Location location = locationResult.getLastLocation();
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+                }
+            };
+
+            FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            LocationRequest mLocationRequest = new LocationRequest();
+            mLocationRequest.setSmallestDisplacement(10);
+
+            if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+
             if(!reloaded)
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(getUserCoords()));
             else
@@ -443,6 +465,26 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
             }
         });
 
+        MenuItemCompat.setOnActionExpandListener(search, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                nextVisibility = !nextVisibility;
+                invalidateOptionsMenu();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+        });
+
+        MenuItem next = menu.findItem(R.id.action_next);
+        next.setVisible(nextVisibility);
+
+        if(nextVisibility)
+            search.expandActionView();
+
         return true;
     }
 
@@ -452,7 +494,10 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
 
         if (id == R.id.action_settings)
             return true;
-        else if(id == R.id.action_next)
+        else if(id == R.id.action_search) {
+            nextVisibility = !nextVisibility;
+            invalidateOptionsMenu();
+        } else if(id == R.id.action_next)
             getNextMarker();
         else if(id == R.id.action_refresh)
             updateEmployees();
