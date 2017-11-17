@@ -12,14 +12,15 @@ import android.widget.TextView;
 
 public class Profile extends AppCompatActivity
 {
-    private TextView firstNameView, lastNameView, employeeIDView, privacyView;
+    private TextView firstNameView, lastNameView, employeeIDView, privacyView, activeView;
     private ImageView profilePicView;
     private Button profilePicButton;
 
     boolean connectionSuccessful;
     private String firstName, lastName, email;
-    private int employeeID;
+    //private int employeeID;
     private boolean publicEmployee;
+    private boolean active;
     private Bitmap profilePic;
 
     User user;
@@ -34,47 +35,38 @@ public class Profile extends AppCompatActivity
         // TODO: Use this to find out if the user is admin or employee and add special admin buttons
         user = getIntent().getParcelableExtra("user");
 
-        // TODO: Don't need to get stuff from server, here is the employee
         employee = getIntent().getParcelableExtra("employee");
 
-        connectionSuccessful = retrieveData();
-
-        initData(connectionSuccessful);
+        initData();
 
         initUI();
     }
 
     /**
-     * Gathers the data from the database.
-     * @return true if data was retrieved from the server, otherwise false
+     * Sets the data for the employee if one exists.
      * @author John Sermarini
      */
-    private boolean retrieveData()
+    private void initData()
     {
-        // Get the necessary data for the employee from the database
-
-        return false;
-    }
-
-    /**
-     * Initializes the data using the data from the database. If connection fails, use default data.
-     * @param connectionSuccessful the server connection was successful
-     * @author John Sermarini
-     */
-    private void initData(boolean connectionSuccessful)
-    {
-        if(!connectionSuccessful)
+        if(employee == null)
         {
             firstName = "FirstName";
             lastName = "LastName";
-            employeeID = -1;
+            //employeeID = -1;
             publicEmployee = true;
             email = "Email";
-            profilePicView = null;
+            active = false;
+            profilePic = null;
         }
         else
         {
-            // Uses the retrieved data
+            firstName = employee.firstName;
+            lastName = employee.lastName;
+            //employeeID
+            publicEmployee = employee.getVisibility();
+            //email
+            active = employee.active;
+            profilePic = employee.pic;
         }
 
     }
@@ -87,8 +79,9 @@ public class Profile extends AppCompatActivity
     {
         firstNameView = (TextView) findViewById(R.id.firstNameView);
         lastNameView = (TextView) findViewById(R.id.lastNameView);
-        employeeIDView = (TextView) findViewById(R.id.employeeIDView);
+        //employeeIDView = (TextView) findViewById(R.id.employeeIDView);
         privacyView = (TextView) findViewById(R.id.privacyView);
+        activeView = (TextView) findViewById(R.id.activeView);
         profilePicView = (ImageView) findViewById(R.id.profilePicView);
         profilePicButton = (Button) findViewById(R.id.profilePicButton);
         profilePicButton.setOnClickListener(new View.OnClickListener()
@@ -103,7 +96,7 @@ public class Profile extends AppCompatActivity
 
         firstNameView.setText(firstName);
         lastNameView.setText(lastName);
-        employeeIDView.setText(Integer.toString(employeeID));
+        //employeeIDView.setText(Integer.toString(employeeID));
         if(publicEmployee)
         {
             privacyView.setText("Public Account");
@@ -111,6 +104,14 @@ public class Profile extends AppCompatActivity
         else
         {
             privacyView.setText("Private Account");
+        }
+        if(active)
+        {
+            activeView.setText("Active");
+        }
+        else
+        {
+            activeView.setText("Inactive");
         }
         if(!connectionSuccessful)
         {
@@ -131,15 +132,17 @@ public class Profile extends AppCompatActivity
             profilePicView.setImageBitmap(profilePic);
         }
 
-        sendPicToBack(profilePic);
+        setEmployeePic(profilePic);
     }
 
     /**
      * Updates the employees picture server side.
      * @param newPic the picture to send back
      */
-    private void sendPicToBack(Bitmap newPic)
+    private void setEmployeePic(Bitmap newPic)
     {
-        // TO DO
+        employee.pic = newPic;
+
+        // TODO: update employee on database
     }
 }

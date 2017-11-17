@@ -41,32 +41,32 @@
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:orientation="horizontal"
             android:weightSum="4">
 
             <TextView
-                android:text="Name:"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:id="@+id/nameView"
-                android:layout_weight="1" />
-
-            <TextView
-                android:text="First"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Name:" />
+
+            <TextView
                 android:id="@+id/firstNameView"
-                android:layout_weight="1" />
-
-            <TextView
-                android:text="Last"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="First" />
+
+            <TextView
                 android:id="@+id/lastNameView"
-                android:layout_weight="1" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Last" />
 
         </LinearLayout>
 
@@ -76,27 +76,19 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <LinearLayout
-                android:orientation="horizontal"
+            <TextView
+                android:id="@+id/privacyView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:weightSum="2">
+                android:layout_weight="1"
+                android:text="PrivacySetting" />
 
-                <TextView
-                    android:text="EmployeeID"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/employeeIDView"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:text="PrivacySetting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/privacyView"
-                    android:layout_weight="1" />
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/activeView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Active" />
 
         </LinearLayout>
 

@@ -73,7 +73,7 @@ public class Camera extends AppCompatActivity
 
         pictureView.setImageResource(android.R.color.transparent);
 
-        // send picture to database for employee ID
+        // TODO: Send picture to database
     }
 
     /**

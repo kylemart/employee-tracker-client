@@ -25,7 +25,11 @@ public class Employee implements Parcelable {
     // The most recent picture of the employee
     public Bitmap pic;
 
+    // If the employee is public
     private boolean visible;
+
+    // If the employee has used the software recently
+    public  boolean active;
 
     Employee(String fullName, String group, LatLng coords, Bitmap pic) {
         this.fullName = fullName;
@@ -39,6 +43,7 @@ public class Employee implements Parcelable {
         this.group = new HashSet<>(Arrays.asList(group.split(",")));
         this.coords = coords;
         this.pic = pic;
+        this.active = false;
     }
 
     public void setVisibility(boolean visibility) {
@@ -63,6 +68,7 @@ public class Employee implements Parcelable {
         dest.writeParcelable(this.coords, flags);
         dest.writeParcelable(this.pic, flags);
         dest.writeByte(this.visible ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.active ? (byte) 1 : (byte) 0);
     }
 
     protected Employee(Parcel in) {
@@ -73,6 +79,7 @@ public class Employee implements Parcelable {
         this.coords = in.readParcelable(LatLng.class.getClassLoader());
         this.pic = in.readParcelable(Bitmap.class.getClassLoader());
         this.visible = in.readByte() != 0;
+        this.active = in.readByte() != 0;
     }
 
     public static final Creator<Employee> CREATOR = new Creator<Employee>() {
