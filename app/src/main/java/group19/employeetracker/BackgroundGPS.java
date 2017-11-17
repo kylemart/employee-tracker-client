@@ -9,6 +9,7 @@ import android.location.Location;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -65,7 +66,7 @@ public class BackgroundGPS extends Service {
     // This way the background service doesn't have to worry about who is logged in
 
     private void sendLocation(double lat, double lng) {
-        System.out.println(lat + ", " + lng);
+        Log.d("BACKGROUNDGPS", lat + ", " + lng);
     }
 
     @Override

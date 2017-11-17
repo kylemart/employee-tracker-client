@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity
         {
             public void onClick(View v)
             {
-                Intent toD = new Intent(MainActivity.this, DatabaseIO.class);
+                Intent toD = new Intent(MainActivity.this, DatabaseIOTest.class);
                 startActivity(toD);
             }
         });

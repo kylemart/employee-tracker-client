@@ -28,6 +28,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -51,11 +56,35 @@ class FilteredMarkers {
         this.size = filteredMarkers.size();
     }
 
-    public Marker getNext() {
+    Marker getNext() {
         if(size == 0)
             return null;
 
         return filteredMarkers.get((nextIndex++) % size);
+    }
+}
+
+class EmployeeMarker {
+    private String fullName;
+    private String lastName;
+    private Marker marker;
+
+    EmployeeMarker(String fn, String ln, Marker m) {
+        fullName = fn;
+        lastName = ln;
+        marker = m;
+    }
+
+    String getFullName() {
+        return fullName;
+    }
+
+    String getLastName() {
+        return lastName;
+    }
+
+    Marker getMarker() {
+        return marker;
     }
 }
 
@@ -76,7 +105,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
     private HashSet<String> activeGroups = new HashSet<>();
 
     // Current set of markers drawn to map
-    private HashSet<Marker> markers = new HashSet<>();
+    private HashSet<EmployeeMarker> markers = new HashSet<>();
 
     // Set of markers found in a search
     private FilteredMarkers filteredMarkers;
@@ -84,6 +113,8 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
     // Helps with orientation changes
     private boolean reloaded = false;
     private CameraPosition savedView;
+
+    private boolean nextVisibility = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,12 +140,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
                 ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 34);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateEmployees();
-            }
-        });
+        fab.setOnClickListener(view -> updateEmployees());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -137,12 +163,10 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         View navHeader = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
         Button logout = (Button) navHeader.findViewById(R.id.logout);
 
-        logout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                stopService(intent);
+        logout.setOnClickListener(v -> {
+            stopService(intent);
 
-                finish();
-            }
+            finish();
         });
     }
 
@@ -165,42 +189,38 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         if(activeGroups.contains(group))
             check.setChecked(true);
 
-        check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    activeGroups.add(group);
-                else
-                    activeGroups.remove(group);
+        check.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked)
+                activeGroups.add(group);
+            else
+                activeGroups.remove(group);
 
-                populateMap(filter(employees, activeGroups));
+            populateMap(filter(employees, activeGroups));
 
-                // Uncheck checkAll checkbox if at least one checkbox is unchecked
-                // Or, check checkAll checkbox if all checkboxes are checked
+            // Uncheck checkAll checkbox if at least one checkbox is unchecked
+            // Or, check checkAll checkbox if all checkboxes are checked
 
-                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-                CheckBox check = (CheckBox)navigationView.getMenu().getItem(0).getActionView();
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            CheckBox check1 = (CheckBox)navigationView.getMenu().getItem(0).getActionView();
 
-                check.setOnCheckedChangeListener(null);
-                check.setChecked(activeGroups.size() == groups.size());
-                check.setOnCheckedChangeListener(checkAllListener());
-            }
+            check1.setOnCheckedChangeListener(null);
+            check1.setChecked(activeGroups.size() == groups.size());
+            check1.setOnCheckedChangeListener(checkAllListener());
         });
 
         item.setActionView(check);
     }
 
     private CompoundButton.OnCheckedChangeListener checkAllListener() {
-        CompoundButton.OnCheckedChangeListener checkAllListener = new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        CompoundButton.OnCheckedChangeListener checkAllListener = (buttonView, isChecked) -> {
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-                SubMenu menu = navigationView.getMenu().getItem(1).getSubMenu();
+            SubMenu menu = navigationView.getMenu().getItem(1).getSubMenu();
 
-                for (int i = 0; i < groups.size(); i++) {
-                    CheckBox checkbox = (CheckBox) menu.getItem(i).getActionView();
+            for (int i = 0; i < groups.size(); i++) {
+                CheckBox checkbox = (CheckBox) menu.getItem(i).getActionView();
 
-                    checkbox.setChecked(isChecked);
-                }
+                checkbox.setChecked(isChecked);
             }
         };
 
@@ -252,7 +272,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         employees = getEmployees();
 
         Bitmap pic = BitmapFactory.decodeResource(this.getResources(), R.drawable.c);
-        employees.add(new Employee("Ryan Graves", "New Group", new LatLng(28.604279, -81.200189), pic));
+        employees.add(new Employee("Ryan Raves", "New Group", new LatLng(28.604279, -81.200189), pic));
 
         groups = findGroups();
 
@@ -283,7 +303,12 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
 
     private LatLng getUserCoords() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+
+        String bestProvider;
+        if((bestProvider = locationManager.getBestProvider(new Criteria(), false)) == null)
+            return new LatLng(0, 0);
+
+        Location location = locationManager.getLastKnownLocation(bestProvider);
 
         return new LatLng(location.getLatitude(), location.getLongitude());
     }
@@ -302,7 +327,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
                     .icon(BitmapDescriptorFactory.fromBitmap(pic)));
             marker.setTag(employee);
 
-            markers.add(marker);
+            markers.add(new EmployeeMarker(employee.fullName, employee.lastName, marker));
         }
     }
 
@@ -320,16 +345,18 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
     }
 
     private ArrayList<Marker> search(String query) {
-        ArrayList<Marker> filteredMarkers = new ArrayList<>();
+        HashSet<Marker> filteredMarkers = new HashSet<>();
 
         if(query.isEmpty() || markers == null)
-            return filteredMarkers;
+            return new ArrayList<>(filteredMarkers);
 
-        for(Marker marker : markers)
-            if(marker.getTitle().toLowerCase().contains(query.toLowerCase()))
-                filteredMarkers.add(marker);
+        markers.parallelStream().forEach(marker -> {
+            if(marker.getFullName().toLowerCase().startsWith(query.toLowerCase())
+            || marker.getLastName().toLowerCase().startsWith(query.toLowerCase()))
+                filteredMarkers.add(marker.getMarker());
+        });
 
-        return filteredMarkers;
+        return new ArrayList<>(filteredMarkers);
     }
 
     private void getNextMarker() {
@@ -350,6 +377,21 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
 
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
+
+            LocationCallback mLocationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    Location location = locationResult.getLastLocation();
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+                }
+            };
+
+            FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            LocationRequest mLocationRequest = new LocationRequest();
+            mLocationRequest.setSmallestDisplacement(10);
+
+            if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
 
             if(!reloaded)
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(getUserCoords()));
@@ -423,6 +465,26 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
             }
         });
 
+        MenuItemCompat.setOnActionExpandListener(search, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                nextVisibility = !nextVisibility;
+                invalidateOptionsMenu();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+        });
+
+        MenuItem next = menu.findItem(R.id.action_next);
+        next.setVisible(nextVisibility);
+
+        if(nextVisibility)
+            search.expandActionView();
+
         return true;
     }
 
@@ -432,8 +494,13 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
 
         if (id == R.id.action_settings)
             return true;
-        else if(id == R.id.action_next)
+        else if(id == R.id.action_search) {
+            nextVisibility = !nextVisibility;
+            invalidateOptionsMenu();
+        } else if(id == R.id.action_next)
             getNextMarker();
+        else if(id == R.id.action_refresh)
+            updateEmployees();
 
         return super.onOptionsItemSelected(item);
     }

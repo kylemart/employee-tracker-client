@@ -46,7 +46,7 @@
             android:name=".BackgroundGPS"
             android:exported="false" />
 
-        <activity android:name=".DatabaseIO"></activity>
+        <activity android:name=".DatabaseIOTest"></activity>
     </application>
 
 </manifest>

@@ -4,7 +4,7 @@ android {
     compileSdkVersion 24
     defaultConfig {
         applicationId "group19.employeetracker"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 24
         multiDexEnabled true
         versionCode 1
@@ -18,6 +18,10 @@ android {
         }
     }
     sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/layout/map'] } }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
