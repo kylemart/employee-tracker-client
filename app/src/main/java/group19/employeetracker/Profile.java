@@ -10,15 +10,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Profile extends AppCompatActivity
 {
-    private TextView firstNameView, lastNameView, employeeIDView, privacyView, activeView;
+    private TextView fullNameView, privacyView, activeView;
     private ImageView profilePicView;
-    private Button profilePicButton;
+    private Button profileButton;
 
-    boolean connectionSuccessful;
-    private String firstName, lastName, email;
-    //private int employeeID;
+    private String firstName, lastName;
     private boolean publicEmployee;
     private boolean active;
     private Bitmap profilePic;
@@ -32,11 +32,6 @@ public class Profile extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // TODO: Use this to find out if the user is admin or employee and add special admin buttons
-        user = getIntent().getParcelableExtra("user");
-
-        employee = getIntent().getParcelableExtra("employee");
-
         initData();
 
         initUI();
@@ -48,13 +43,18 @@ public class Profile extends AppCompatActivity
      */
     private void initData()
     {
+        // TODO: import user and employee from other activity.
+        //user = getIntent().getParcelableExtra("user");
+        //employee = getIntent().getParcelableExtra("employee");
+
+        user = new User(true, "John Smith", "JohnSmith@average.com");
+        employee = new Employee(user.name, "1, 2, 3", null, null);
+
         if(employee == null)
         {
-            firstName = "FirstName";
-            lastName = "LastName";
-            //employeeID = -1;
+            firstName = "First";
+            lastName = "Last";
             publicEmployee = true;
-            email = "Email";
             active = false;
             profilePic = null;
         }
@@ -62,9 +62,7 @@ public class Profile extends AppCompatActivity
         {
             firstName = employee.firstName;
             lastName = employee.lastName;
-            //employeeID
             publicEmployee = employee.getVisibility();
-            //email
             active = employee.active;
             profilePic = employee.pic;
         }
@@ -77,33 +75,20 @@ public class Profile extends AppCompatActivity
      */
     private void initUI()
     {
-        firstNameView = (TextView) findViewById(R.id.firstNameView);
-        lastNameView = (TextView) findViewById(R.id.lastNameView);
-        //employeeIDView = (TextView) findViewById(R.id.employeeIDView);
+        fullNameView = (TextView) findViewById(R.id.fullNameView);
         privacyView = (TextView) findViewById(R.id.privacyView);
         activeView = (TextView) findViewById(R.id.activeView);
         profilePicView = (ImageView) findViewById(R.id.profilePicView);
-        profilePicButton = (Button) findViewById(R.id.profilePicButton);
-        profilePicButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(takePictureIntent, 0);
-            }
-        });
+        initProfileButton();
 
-        firstNameView.setText(firstName);
-        lastNameView.setText(lastName);
-        //employeeIDView.setText(Integer.toString(employeeID));
+        fullNameView.setText(firstName + " " + lastName);
         if(publicEmployee)
         {
-            privacyView.setText("Public Account");
+            privacyView.setText("Public");
         }
         else
         {
-            privacyView.setText("Private Account");
+            privacyView.setText("Private");
         }
         if(active)
         {
@@ -113,7 +98,7 @@ public class Profile extends AppCompatActivity
         {
             activeView.setText("Inactive");
         }
-        if(!connectionSuccessful)
+        if(employee == null)
         {
             profilePicView.setImageResource(android.R.color.transparent);
         }
@@ -121,6 +106,64 @@ public class Profile extends AppCompatActivity
         {
             profilePicView.setImageBitmap(profilePic);
         }
+    }
+
+    /**
+     * If employee, sets the profile button to change pic, if not sets button to change employee privacy setting.
+     * @author John Sermarini
+     */
+    private void initProfileButton()
+    {
+        profileButton = (Button) findViewById(R.id.profileButton);
+        final boolean isEmployee = user.type;
+
+        if(isEmployee)
+        {
+            profileButton.setText("Change Profile Picture");
+        }
+        else
+        {
+            profileButton.setText("Change Privacy Setting");
+        }
+
+        profileButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if(isEmployee)
+                {
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(takePictureIntent, 0);
+                }
+                else
+                {
+                    if(!employee.getVisibility())
+                    {
+                        activeView.setText("Public");
+                        employee.setVisibility(true);
+                    }
+                    else
+                    {
+                        activeView.setText("Private");
+                        employee.setVisibility(false);
+                    }
+
+                    //TODO: Send active status to database
+                }
+            }
+        });
+    }
+
+    /**
+     * Updates the employees picture server side.
+     * @param newPic the picture to send back
+     */
+    private void setEmployeePic(Bitmap newPic)
+    {
+        employee.pic = newPic;
+
+        // TODO: update employee on database
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -133,16 +176,5 @@ public class Profile extends AppCompatActivity
         }
 
         setEmployeePic(profilePic);
-    }
-
-    /**
-     * Updates the employees picture server side.
-     * @param newPic the picture to send back
-     */
-    private void setEmployeePic(Bitmap newPic)
-    {
-        employee.pic = newPic;
-
-        // TODO: update employee on database
     }
 }
