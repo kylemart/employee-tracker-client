@@ -47,7 +47,7 @@ public class Profile extends AppCompatActivity
         //user = getIntent().getParcelableExtra("user");
         //employee = getIntent().getParcelableExtra("employee");
 
-        user = new User(true, "John Smith", "JohnSmith@average.com");
+        user = new User(false, "John Smith", "JohnSmith@average.com");
         employee = new Employee(user.name, "1, 2, 3", null, null);
 
         if(employee == null)
@@ -115,9 +115,9 @@ public class Profile extends AppCompatActivity
     private void initProfileButton()
     {
         profileButton = (Button) findViewById(R.id.profileButton);
-        final boolean isEmployee = user.type;
+        final boolean isBoss = user.type;
 
-        if(isEmployee)
+        if(!isBoss)
         {
             profileButton.setText("Change Profile Picture");
         }
@@ -131,7 +131,7 @@ public class Profile extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                if(isEmployee)
+                if(!isBoss)
                 {
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(takePictureIntent, 0);

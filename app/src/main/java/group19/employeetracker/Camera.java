@@ -17,8 +17,8 @@ public class Camera extends AppCompatActivity
     private boolean pictureTaken;
 
     private ImageView pictureView;
-    private ImageButton takePictureButton;
-    private ImageButton toMapButton;
+    private Button takePictureButton;
+    private Button toMapButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -31,7 +31,7 @@ public class Camera extends AppCompatActivity
 
         pictureView = (ImageView) findViewById(R.id.pictureView);
 
-        takePictureButton = (ImageButton) findViewById(R.id.toCameraAction);
+        takePictureButton = (Button) findViewById(R.id.toCameraAction);
         takePictureButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -42,7 +42,7 @@ public class Camera extends AppCompatActivity
             }
         });
 
-        toMapButton = (ImageButton) findViewById(R.id.toMap);
+        toMapButton = (Button) findViewById(R.id.toMap);
         toMapButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
