@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 public class Camera extends AppCompatActivity
 {
-    private int employeeID;
     private boolean pictureTaken;
 
     private ImageView pictureView;
@@ -26,19 +25,16 @@ public class Camera extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        employeeID = 123456789;
         pictureTaken = false;
 
         pictureView = (ImageView) findViewById(R.id.pictureView);
-
         takePictureButton = (Button) findViewById(R.id.toCameraAction);
         takePictureButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(takePictureIntent, 0);
+                takePicture();
             }
         });
 
@@ -48,7 +44,7 @@ public class Camera extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                takePicture();
+                sendPicture();
             }
         });
     }
@@ -57,14 +53,21 @@ public class Camera extends AppCompatActivity
      * Takes the user's picture.
      * @author John Sermarini
      */
-    private void takePicture()
+    public void takePicture()
+    {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(takePictureIntent, 0);
+    }
+
+    /**
+     * Sends the user's picture and completes the activity.
+     * @author John Sermarini
+     */
+    private void sendPicture()
     {
         if(pictureTaken == true)
         {
-            sendPictureToDatabase();
-
-            Intent toOptions = new Intent(Camera.this, MapsActivity.class);
-            startActivity(toOptions);
+            sendSuccessful();
         }
         else
         {
@@ -72,17 +75,15 @@ public class Camera extends AppCompatActivity
         }
     }
 
-    /**
-     * Sends the picture taken to the database.
-     * @author John Sermarini
-     */
-    private void sendPictureToDatabase()
+    private void sendSuccessful()
     {
         pictureTaken = false;
 
         pictureView.setImageResource(android.R.color.transparent);
 
         // TODO: Send picture to database
+
+        toMap();
     }
 
     /**
@@ -92,6 +93,16 @@ public class Camera extends AppCompatActivity
     private void sendFailed()
     {
         new Toast(getApplicationContext()).makeText(getApplicationContext(), "To continue, you must take a picture to send.", Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * Starts Map activity
+     * @author John Sermarini
+     */
+    private void toMap()
+    {
+        Intent toOptions = new Intent(Camera.this, MapsActivity.class);
+        startActivity(toOptions);
     }
 
     @Override
