@@ -43,12 +43,12 @@ public class Profile extends AppCompatActivity
      */
     private void initData()
     {
+        user = new User(false, "John Smith", "JohnSmith@average.com");
+        employee = new Employee(user.name, "1, 2, 3", null, null);
+
         // TODO: import user and employee from other activity.
         //user = getIntent().getParcelableExtra("user");
         //employee = getIntent().getParcelableExtra("employee");
-
-        user = new User(false, "John Smith", "JohnSmith@average.com");
-        employee = new Employee(user.name, "1, 2, 3", null, null);
 
         if(employee == null)
         {
@@ -163,7 +163,7 @@ public class Profile extends AppCompatActivity
     {
         employee.pic = newPic;
 
-        // TODO: update employee on database
+        // TODO: Update employee picture on database
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)

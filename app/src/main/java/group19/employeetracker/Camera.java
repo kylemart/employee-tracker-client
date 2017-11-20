@@ -48,26 +48,35 @@ public class Camera extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                if(pictureTaken == true)
-                {
-                    sendPicture();
-
-                    Intent toOptions = new Intent(Camera.this, MapsActivity.class);
-                    startActivity(toOptions);
-                }
-                else
-                {
-                    sendFailed();
-                }
+                takePicture();
             }
         });
+    }
+
+    /**
+     * Takes the user's picture.
+     * @author John Sermarini
+     */
+    private void takePicture()
+    {
+        if(pictureTaken == true)
+        {
+            sendPictureToDatabase();
+
+            Intent toOptions = new Intent(Camera.this, MapsActivity.class);
+            startActivity(toOptions);
+        }
+        else
+        {
+            sendFailed();
+        }
     }
 
     /**
      * Sends the picture taken to the database.
      * @author John Sermarini
      */
-    private void sendPicture()
+    private void sendPictureToDatabase()
     {
         pictureTaken = false;
 
