@@ -13,12 +13,11 @@ import android.widget.Toast;
 
 public class Camera extends AppCompatActivity
 {
-    private int employeeID;
     private boolean pictureTaken;
 
     private ImageView pictureView;
-    private ImageButton takePictureButton;
-    private ImageButton toMapButton;
+    private Button takePictureButton;
+    private Button toMapButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -26,54 +25,65 @@ public class Camera extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        employeeID = 123456789;
         pictureTaken = false;
 
         pictureView = (ImageView) findViewById(R.id.pictureView);
-
-        takePictureButton = (ImageButton) findViewById(R.id.toCameraAction);
+        takePictureButton = (Button) findViewById(R.id.toCameraAction);
         takePictureButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(takePictureIntent, 0);
+                takePicture();
             }
         });
 
-        toMapButton = (ImageButton) findViewById(R.id.toMap);
+        toMapButton = (Button) findViewById(R.id.toMap);
         toMapButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                if(pictureTaken == true)
-                {
-                    sendPicture();
-
-                    Intent toOptions = new Intent(Camera.this, MapsActivity.class);
-                    startActivity(toOptions);
-                }
-                else
-                {
-                    sendFailed();
-                }
+                sendPicture();
             }
         });
     }
 
     /**
-     * Sends the picture taken to the database.
+     * Takes the user's picture.
+     * @author John Sermarini
+     */
+    public void takePicture()
+    {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(takePictureIntent, 0);
+    }
+
+    /**
+     * Sends the user's picture and completes the activity.
      * @author John Sermarini
      */
     private void sendPicture()
+    {
+        if(pictureTaken == true)
+        {
+            sendSuccessful();
+        }
+        else
+        {
+            sendFailed();
+        }
+    }
+
+    private void sendSuccessful()
     {
         pictureTaken = false;
 
         pictureView.setImageResource(android.R.color.transparent);
 
         // TODO: Send picture to database
+
+        toMap();
     }
 
     /**
@@ -83,6 +93,16 @@ public class Camera extends AppCompatActivity
     private void sendFailed()
     {
         new Toast(getApplicationContext()).makeText(getApplicationContext(), "To continue, you must take a picture to send.", Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * Starts Map activity
+     * @author John Sermarini
+     */
+    private void toMap()
+    {
+        Intent toOptions = new Intent(Camera.this, MapsActivity.class);
+        startActivity(toOptions);
     }
 
     @Override
