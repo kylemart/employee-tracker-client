@@ -1,8 +1,11 @@
 package group19.employeetracker;
 
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +19,9 @@ public class MainActivity extends AppCompatActivity
     private Button debugMapButton;
     private Button debugDButton;
 
+    Intent serviceIntent;
+    BackgroundGPS mService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -24,22 +30,36 @@ public class MainActivity extends AppCompatActivity
 
         debugInit();
 
-        if(isLoggedIn()) {
-            Intent toMap = new Intent(MainActivity.this, MapsActivity.class);
-            startActivity(toMap);
+        serviceIntent = new Intent(this, BackgroundGPS.class);
+        startService(serviceIntent);
+        bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(!mService.isRunning())
+            stopService(serviceIntent);
+    }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            BackgroundGPS.LocalBinder binder = (BackgroundGPS.LocalBinder) service;
+            mService = binder.getService();
+
+            if(mService.isRunning()) {
+                Intent toMap = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(toMap);
+            }
+
+            unbindService(mConnection);
         }
-    }
 
-    // TODO: Use this in final login page to skip logging in if already logged in
-    private boolean isLoggedIn() {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
-            if (BackgroundGPS.class.getName().equals(service.service.getClassName()))
-                return true;
-
-        return false;
-    }
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+        }
+    };
 
     /**
      * Initializes the buttons and intents necessary for testing and debugging.

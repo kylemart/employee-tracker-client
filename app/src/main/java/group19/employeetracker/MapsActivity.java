@@ -1,8 +1,10 @@
 package group19.employeetracker;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +12,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -92,6 +95,8 @@ class EmployeeMarker {
 public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoWindowClickListener, OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
     private GoogleMap mMap;
 
+    BackgroundGPS mService;
+
     // The user currently using the app
     private User user;
 
@@ -157,8 +162,9 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        final Intent intent = new Intent(this, BackgroundGPS.class);
+        Intent intent = new Intent(this, BackgroundGPS.class);
         startService(intent);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         View navHeader = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
         Button logout = (Button) navHeader.findViewById(R.id.logout);
@@ -169,6 +175,20 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
             finish();
         });
     }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            BackgroundGPS.LocalBinder binder = (BackgroundGPS.LocalBinder) service;
+            mService = binder.getService();
+
+            mService.start();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+        }
+    };
 
     private void createNavView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -301,7 +321,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         return groups;
     }
 
-    private LatLng getUserCoords() {
+    public LatLng getUserCoords() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         String bestProvider;
@@ -344,19 +364,37 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         return filteredEmployees;
     }
 
-    private ArrayList<Marker> search(String query) {
+    private ArrayList<Marker> search(String query, HashSet<EmployeeMarker> markers) {
         HashSet<Marker> filteredMarkers = new HashSet<>();
 
         if(query.isEmpty() || markers == null)
             return new ArrayList<>(filteredMarkers);
 
-        markers.parallelStream().forEach(marker -> {
+        // removed parallelStream()
+
+        markers.forEach(marker -> {
             if(marker.getFullName().toLowerCase().startsWith(query.toLowerCase())
             || marker.getLastName().toLowerCase().startsWith(query.toLowerCase()))
                 filteredMarkers.add(marker.getMarker());
         });
 
         return new ArrayList<>(filteredMarkers);
+    }
+
+    // TODO: Move to EmployeeListActivity
+    public ArrayList<Employee> searchList(String query, ArrayList<Employee> employees) {
+        HashSet<Employee> filtered = new HashSet<>();
+
+        if(query.isEmpty() || employees == null)
+            return new ArrayList<>(filtered);
+
+        employees.forEach(employee -> {
+            if(employee.fullName.toLowerCase().startsWith(query.toLowerCase())
+                    || employee.lastName.toLowerCase().startsWith(query.toLowerCase()))
+                filtered.add(employee);
+        });
+
+        return new ArrayList<>(filtered);
     }
 
     private void getNextMarker() {
@@ -377,21 +415,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
 
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
-
-            LocationCallback mLocationCallback = new LocationCallback() {
-                @Override
-                public void onLocationResult(LocationResult locationResult) {
-                    Location location = locationResult.getLastLocation();
-                    mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
-                }
-            };
-
-            FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-            LocationRequest mLocationRequest = new LocationRequest();
-            mLocationRequest.setSmallestDisplacement(10);
-
-            if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
 
             if(!reloaded)
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(getUserCoords()));
@@ -450,7 +473,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                filteredMarkers = new FilteredMarkers(search(query));
+                filteredMarkers = new FilteredMarkers(search(query, markers));
                 getNextMarker();
 
                 return true;
@@ -458,7 +481,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                filteredMarkers = new FilteredMarkers(search(newText));
+                filteredMarkers = new FilteredMarkers(search(newText, markers));
                 getNextMarker();
 
                 return true;
