@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation = "vertical"
+    android:background = "#3535B2"
+    android:gravity = "center">
+    <!--android:background="@drawable/bluesky"-->
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="192dp"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/newlogo" />
+
+    <EditText
+        android:id="@+id/etfirstName"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Name"
+        android:inputType="textPersonName"
+        android:textColorHint="#FFEBEE"
+        android:textColor="#ffffff"
+        tools:layout_editor_absoluteX="85dp"
+        tools:layout_editor_absoluteY="45dp" />
+
+    <EditText
+        android:id="@+id/etlastName"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Last Name"
+        android:inputType="textPersonName"
+        android:textColorHint="#FFEBEE"
+        android:textColor="#ffffff"
+        tools:layout_editor_absoluteX="85dp"
+        tools:layout_editor_absoluteY="108dp" />
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textPersonName"
+        android:textColorHint="#FFEBEE"
+        android:textColor="#ffffff"
+        tools:layout_editor_absoluteX="85dp"
+        tools:layout_editor_absoluteY="170dp" />
+
+    <EditText
+        android:id="@+id/etpass1"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColorHint="#FFEBEE"
+        android:textColor="#ffffff"
+        tools:layout_editor_absoluteX="85dp"
+        tools:layout_editor_absoluteY="234dp" />
+
+    <EditText
+        android:id="@+id/etpass2"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textColor="#FFEBEE"
+        android:hint="ReEnter Password"
+        android:textColorHint="#FFEBEE"
+        android:inputType="textPassword"
+        tools:layout_editor_absoluteX="85dp"
+        tools:layout_editor_absoluteY="303dp" />
+
+    <Button
+        android:id="@+id/bcreateaccount"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="#8585D0"
+        android:text="Create Account"
+        android:textColor="#ffffff"
+        tools:layout_editor_absoluteX="120dp"
+        tools:layout_editor_absoluteY="361dp" />
+
+</LinearLayout>

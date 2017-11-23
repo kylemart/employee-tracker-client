@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity
     private Button debugProfileButton;
     private Button debugMapButton;
     private Button debugDButton;
+    private Button debugLoginButton;
 
     Intent serviceIntent;
     BackgroundGPS mService;
@@ -104,6 +105,17 @@ public class MainActivity extends AppCompatActivity
             {
                 Intent toD = new Intent(MainActivity.this, DatabaseIOTest.class);
                 startActivity(toD);
+            }
+        });
+
+        debugLoginButton = (Button) findViewById(R.id.debugLogInButton);
+        debugLoginButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent toLogIn = new Intent(MainActivity.this, LogIn.class);
+                startActivity(toLogIn);
             }
         });
     }

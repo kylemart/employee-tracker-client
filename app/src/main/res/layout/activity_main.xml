@@ -58,4 +58,13 @@
         android:layout_alignLeft="@+id/debugMapButton"
         android:layout_alignStart="@+id/debugMapButton" />
 
+    <Button
+        android:id="@+id/debugLogInButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/debugDButton"
+        android:layout_marginTop="22dp"
+        android:text="To LogIn..." />
+
 </RelativeLayout>
