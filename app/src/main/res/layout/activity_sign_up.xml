@@ -68,7 +68,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:textColor="#FFEBEE"
+        android:textColor="@color/buttonColorText"
         android:hint="ReEnter Password"
         android:textColorHint="#FFEBEE"
         android:inputType="textPassword"

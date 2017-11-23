@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation = "vertical"
     android:gravity = "center"
-    android:background="#3535B2"
+    android:background="@color/backgroundColor"
     tools:context="michael.employeetracker.LogIn">
 
     <!--
@@ -68,9 +68,9 @@
         android:layout_above="@+id/etEmail"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="39dp"
-        android:background="#8585D0"
+        android:background="@color/buttonColor"
         android:text="Log In"
-        android:textColor="#FFEBEE"
+        android:textColor="@color/buttonColorText"
         tools:layout_editor_absoluteX="130dp"
         tools:layout_editor_absoluteY="271dp" />
 
@@ -79,7 +79,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:text="No Account? Create One"
-        android:textColor="#FFEBEE"
+        android:textColor="@color/buttonColorText"
         android:textAlignment="center"
         tools:layout_editor_absoluteX="171dp"
         tools:layout_editor_absoluteY="340dp" />
