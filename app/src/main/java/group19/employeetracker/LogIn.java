@@ -49,8 +49,10 @@ public class LogIn extends AppCompatActivity {
     private void logIn()
     {
         //TODO: Retrieve user information and attach to intent.
-
+        User user = new User(false, "John Smith", "JohnSmith@gmail.com");
         Intent i = new Intent(LogIn.this, Camera.class);
+        i.putExtra("user", user);
+
         LogIn.this.startActivity(i);
     }
 }

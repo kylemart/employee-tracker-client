@@ -23,7 +23,8 @@
         android:textAlignment="center"
         android:textSize="30sp"
         android:textColor="@color/buttonColorText"
-        android:textStyle="italic" />
+        android:textStyle="italic"
+        android:id="@+id/welcomeText"/>
 
     <ImageView
         android:id="@+id/pictureView"

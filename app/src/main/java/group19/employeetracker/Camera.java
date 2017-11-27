@@ -9,21 +9,29 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 public class Camera extends AppCompatActivity
 {
+    User user;
+
     private boolean pictureTaken;
 
     private ImageView pictureView;
     private Button takePictureButton;
     private Button toMapButton;
+    private TextView welcomeText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        user = getIntent().getParcelableExtra("user");
 
         pictureTaken = false;
 
@@ -47,6 +55,9 @@ public class Camera extends AppCompatActivity
                 sendPicture();
             }
         });
+
+        welcomeText = (TextView) findViewById(R.id.welcomeText);
+        welcomeText.setText("Welcome " + user.name);
     }
 
     /**
@@ -102,6 +113,7 @@ public class Camera extends AppCompatActivity
     private void toMap()
     {
         Intent toOptions = new Intent(Camera.this, MapsActivity.class);
+        toOptions.putExtra("user", user);
         startActivity(toOptions);
     }
 
