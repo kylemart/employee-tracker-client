@@ -6,4 +6,16 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="login_email">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_enter">Login</string>
+    <string name="login_no_account">No Account? Create One</string>
+
+    <string name="sign_up_first_name">First Name</string>
+    <string name="sign_up_last_name">Last Name</string>
+    <string name="sign_up_email">Email</string>
+    <string name="sign_up_create_account">Create Account</string>
+    <string name="sign_up_password_hint">Password</string>
+    <string name="sign_up_second_password_hint">Password (again)</string>
 </resources>

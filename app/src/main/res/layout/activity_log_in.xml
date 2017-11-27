@@ -7,7 +7,7 @@
     android:orientation = "vertical"
     android:gravity = "center"
     android:background="@color/backgroundColor"
-    tools:context="michael.employeetracker.LogIn">
+    tools:context="group19.employeetracker.LogIn">
 
     <!--
         <EditText
@@ -34,13 +34,11 @@
         android:id="@+id/etEmail"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/signup"
         android:layout_marginTop="32dp"
         android:ems="10"
-        android:hint="Username"
+        android:hint="@string/login_email"
         android:textColorHint="#ffffff"
-        android:inputType="textPersonName"
+        android:inputType="textEmailAddress"
         android:textColor="#ffffff"
         tools:layout_editor_absoluteX="85dp"
         tools:layout_editor_absoluteY="147dp" />
@@ -49,14 +47,11 @@
         android:id="@+id/etpassword"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/blogin"
-        android:layout_alignParentStart="true"
         android:layout_marginBottom="39dp"
         android:ems="10"
         android:textColorHint="#FFEBEE"
-        android:hint="password"
+        android:hint="@string/login_password_hint"
         android:inputType="textPassword"
-        android:text="et"
         android:textColor="#ffffff"
         tools:layout_editor_absoluteX="85dp"
         tools:layout_editor_absoluteY="201dp" />
@@ -65,11 +60,9 @@
         android:id="@+id/blogin"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/etEmail"
-        android:layout_alignParentStart="true"
         android:layout_marginBottom="39dp"
         android:background="@color/buttonColor"
-        android:text="Log In"
+        android:text="@string/login_enter"
         android:textColor="@color/buttonColorText"
         tools:layout_editor_absoluteX="130dp"
         tools:layout_editor_absoluteY="271dp" />
@@ -78,7 +71,7 @@
         android:id="@+id/signup"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="No Account? Create One"
+        android:text="@string/login_no_account"
         android:textColor="@color/buttonColorText"
         android:textAlignment="center"
         tools:layout_editor_absoluteX="171dp"

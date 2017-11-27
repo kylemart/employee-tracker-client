@@ -7,20 +7,13 @@
     android:orientation = "vertical"
     android:background = "#3535B2"
     android:gravity = "center">
-    <!--android:background="@drawable/bluesky"-->
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="192dp"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/newlogo" />
 
     <EditText
         android:id="@+id/etfirstName"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Name"
+        android:hint="@string/sign_up_first_name"
         android:inputType="textPersonName"
         android:textColorHint="#FFEBEE"
         android:textColor="#ffffff"
@@ -32,7 +25,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Last Name"
+        android:hint="@string/sign_up_last_name"
         android:inputType="textPersonName"
         android:textColorHint="#FFEBEE"
         android:textColor="#ffffff"
@@ -44,8 +37,8 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Email"
-        android:inputType="textPersonName"
+        android:hint="@string/sign_up_email"
+        android:inputType="textEmailAddress"
         android:textColorHint="#FFEBEE"
         android:textColor="#ffffff"
         tools:layout_editor_absoluteX="85dp"
@@ -56,7 +49,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Password"
+        android:hint="@string/sign_up_password_hint"
         android:inputType="textPassword"
         android:textColorHint="#FFEBEE"
         android:textColor="#ffffff"
@@ -69,7 +62,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:textColor="@color/buttonColorText"
-        android:hint="ReEnter Password"
+        android:hint="@string/sign_up_second_password_hint"
         android:textColorHint="#FFEBEE"
         android:inputType="textPassword"
         tools:layout_editor_absoluteX="85dp"
@@ -80,8 +73,9 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:background="#8585D0"
-        android:text="Create Account"
+        android:text="@string/sign_up_create_account"
         android:textColor="#ffffff"
+        android:layout_marginTop="39dp"
         tools:layout_editor_absoluteX="120dp"
         tools:layout_editor_absoluteY="361dp" />
 
