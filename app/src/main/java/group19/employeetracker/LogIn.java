@@ -26,13 +26,31 @@ public class LogIn extends AppCompatActivity {
 
         signup.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 Intent i = new Intent(LogIn.this, SignUp.class);
                 LogIn.this.startActivity(i);
-
-
             }
         });
 
+        blogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                logIn();
+            }
+        });
+    }
+
+    /**
+     *
+     * @author John Sermarini
+     */
+    private void logIn()
+    {
+        //TODO: Retrieve user information and attach to intent.
+
+        Intent i = new Intent(LogIn.this, Camera.class);
+        LogIn.this.startActivity(i);
     }
 }

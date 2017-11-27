@@ -108,6 +108,11 @@ public class Camera extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        if(data.getExtras().get("data") == null)
+        {
+            return;
+        }
+
         Bitmap bitmap = (Bitmap) data.getExtras().get("data");
 
         if(bitmap != null)

@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.HashSet;
+
 public class Profile extends AppCompatActivity
 {
     private TextView fullNameView, privacyView, activeView;
