@@ -83,7 +83,9 @@ public class MainActivity extends AppCompatActivity
         {
             public void onClick(View v)
             {
+                User user = new User(false, "John Smith", "JohnSmith@average.com");
                 Intent toProfile = new Intent(MainActivity.this, Profile.class);
+                toProfile.putExtra("user", user);
                 startActivity(toProfile);
             }
         });
@@ -93,7 +95,9 @@ public class MainActivity extends AppCompatActivity
         {
             public void onClick(View v)
             {
+                User user = new User(false, "John Smith", "JohnSmith@average.com");
                 Intent toMap = new Intent(MainActivity.this, MapsActivity.class);
+                toMap.putExtra("user", user);
                 startActivity(toMap);
             }
         });

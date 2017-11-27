@@ -126,8 +126,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        // TODO: Uncomment when linked with login page and intent passes the user along
-        //user = getIntent().getParcelableExtra("user");
+        user = getIntent().getParcelableExtra("user");
 
         if (savedInstanceState != null) {
             reloaded = true;
