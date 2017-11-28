@@ -72,8 +72,17 @@ public class SignUp extends AppCompatActivity
                                         response.optString("email")
                                     );
 
-                                    SignUp.this.startActivity(
-                                            new Intent(SignUp.this, LogIn.class));
+                                    if (user.isAdmin) {
+                                        User.createUser(getApplicationContext(),user.isAdmin, user.firstName, user.lastName, user.email);
+                                        SignUp.this.startActivity(
+                                                new Intent(SignUp.this, NavActivity.class)
+                                        );
+                                    } else {
+                                        User.createUser(getApplicationContext(),user.isAdmin, user.firstName, user.lastName, user.email);
+                                        SignUp.this.startActivity(
+                                                new Intent(SignUp.this, Camera.class)
+                                        );
+                                    }
                                 }
                             } else {
                                 Toast.makeText(
