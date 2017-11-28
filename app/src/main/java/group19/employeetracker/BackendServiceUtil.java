@@ -17,8 +17,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static android.content.Context.MODE_PRIVATE;
-
 public final class BackendServiceUtil {
 
     /** Tag used for identifying log messages from object of this class. */
@@ -37,86 +35,52 @@ public final class BackendServiceUtil {
     }
 
     /**
-     * Gets data from the backend service at the specified route.
-     *
-     * @param route the backend service route to target
-     * @return the response from the backend service
-     * @throws IOException if there was a problem extracting
+     * Gets a JSON response object from the backend service with an authorization token.
+     * @param route the route to get data from
+     * @param auth the authorization token
+     * @return a JSON response object
      */
-    public static JSONObject get(Context ctx, String route, boolean useAuth) {
-        String jsonResult = null;
-
-        Request.Builder builder = new Request.Builder()
+    public static JSONObject get(String route, String auth) {
+        Request request = new Request.Builder()
                 .url(createUrl(route))
-                .get();
+                .get()
+                .header("Authorization", auth)
+                .build();
 
-        if (useAuth) {
-            SharedPreferences pref = ctx.getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
-            builder.header("Authorization", pref.getString("token", ""));
-        }
-
-        Request request = builder.build();
-
-        try {
-            Response response = executeRequest(request);
-            jsonResult = response.body().string();
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem performing GET request", e);
-        }
-
-        try {
-            return new JSONObject(jsonResult);
-        } catch (JSONException e) {
-            return new JSONObject();
-        }
+        return executeRequest(request);
     }
 
-    /**
-     * Posts a JSON body to the backend service at the specified route.
-     *
-     * @param route the backend service route to target
-     * @param useAuth use auth if true; don't otherwise
-     * @param json the JSON to post to the backend service
-     * @return the response from the backend service
-     */
-    public static JSONObject post(Context ctx, String route, boolean useAuth, JSONObject json) {
-        String jsonResult = null;
-
-        RequestBody requestBody = RequestBody.create(JSON, json.toString());
-
-        Request.Builder builder = new Request.Builder()
-                .url(createUrl(route))
-                .post(requestBody);
-
-        if (useAuth) {
-            SharedPreferences pref = ctx.getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
-            builder.header("Authorization", pref.getString("token", ""));
-        }
-
-        Request request = builder.build();
-
-        try {
-            Response response = executeRequest(request);
-            jsonResult = response.body().string();
-        } catch (IOException e) {
-            Log.e(LOG_TAG,"Problem performing POST request", e);
-        }
-
-        try {
-            return new JSONObject(jsonResult);
-        } catch (JSONException e) {
-            return new JSONObject();
-        }
+    public static JSONObject get(String route) {
+        return get(route, "");
     }
 
-    /**
-     * Executes an HTTP request.
-     *
-     * @param request the request to execute
-     * @return the response
-     */
-    private static Response executeRequest(Request request) throws IOException {
-        return HTTP_CLIENT.newCall(request).execute();
+    public static JSONObject post(String route, JSONObject payload, String auth) {
+        RequestBody requestBody = RequestBody.create(JSON, payload.toString());
+
+        Request request = new Request.Builder()
+                .url(createUrl(route))
+                .header("Authorization", auth)
+                .post(requestBody)
+                .build();
+
+        return executeRequest(request);
+    }
+
+    public static JSONObject post(String route, JSONObject payload) {
+        return post(route, payload, "");
+    }
+
+    private static JSONObject executeRequest(Request request) {
+        try {
+            Response response = HTTP_CLIENT.newCall(request).execute();
+            String json = response.body().string();
+            return new JSONObject(json);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem performing " + request.method() + " request", e);
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "Problem parsing request", e);
+        }
+        return new JSONObject();
     }
 
     /**
