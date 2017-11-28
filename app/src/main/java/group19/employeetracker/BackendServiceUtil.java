@@ -2,6 +2,7 @@ package group19.employeetracker;
 
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -38,15 +39,20 @@ public final class BackendServiceUtil {
      * @return the response from the backend service
      * @throws IOException if there was a problem extracting
      */
-    public static String get(String route) throws IOException {
+    public static JSONObject get(String route) throws IOException {
         Request request = new Request.Builder()
                 .url(createUrl(route))
                 .get()
                 .build();
 
         Response response = executeRequest(request);
+        String jsonResult = response.body().string();
 
-        return response.body().string();
+        try {
+            return new JSONObject(jsonResult);
+        } catch (JSONException e) {
+            return new JSONObject();
+        }
     }
 
     /**
@@ -55,9 +61,10 @@ public final class BackendServiceUtil {
      * @param route the backend service route to target
      * @param json the JSON to post to the backend service
      * @return the response from the backend service
-     * @throws IOException if there was a problem handling the request
      */
-    public static String post(String route, JSONObject json) throws IOException {
+    public static JSONObject post(String route, JSONObject json) {
+        String jsonResult = "";
+
         RequestBody requestBody = RequestBody.create(JSON, json.toString());
 
         Request request = new Request.Builder()
@@ -65,15 +72,18 @@ public final class BackendServiceUtil {
                 .post(requestBody)
                 .build();
 
-        Response response = null;
-
         try {
-            response = executeRequest(request);
+            Response response = executeRequest(request);
+            jsonResult = response.body().string();
         } catch (IOException e) {
             Log.e(LOG_TAG,"Problem performing POST request", e);
         }
 
-        return response.body().string();
+        try {
+            return new JSONObject(jsonResult);
+        } catch (JSONException e) {
+            return new JSONObject();
+        }
     }
 
     /**
