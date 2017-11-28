@@ -7,13 +7,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class LogIn extends AppCompatActivity {
+public class LogIn extends AppCompatActivity
+{
+    User user;
 
     @Override
     //XML is loaded into a View resource
     //Loading the layout resource
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
@@ -48,11 +52,42 @@ public class LogIn extends AppCompatActivity {
      */
     private void logIn()
     {
-        //TODO: Retrieve user information and attach to intent.
-        User user = new User(false, "John Smith", "JohnSmith@gmail.com");
-        Intent i = new Intent(LogIn.this, Camera.class);
-        i.putExtra("user", user);
+        if(!checkData())
+        {
+            new Toast(getApplicationContext()).makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG).show();
+            return;
+        }
 
-        LogIn.this.startActivity(i);
+        // User is employee
+        if(!user.type)
+        {
+            Intent i = new Intent(LogIn.this, Camera.class);
+            i.putExtra("user", user);
+
+            LogIn.this.startActivity(i);
+        }
+        // User is boss
+        else
+        {
+            Intent i = new Intent(LogIn.this, MapsActivity.class);
+            i.putExtra("user", user);
+
+            LogIn.this.startActivity(i);
+        }
+
+    }
+
+    /**
+     *
+     * @return false if employee used invalid login, true if else
+     * @author John Sermarini
+     */
+    private boolean checkData()
+    {
+        //TODO: Retrieve user information. If invalid return false;
+
+        user = new User(false, "John Smith", "JohnSmith@gmail.com");
+
+        return true;
     }
 }

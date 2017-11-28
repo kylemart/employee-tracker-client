@@ -45,12 +45,13 @@ public class Profile extends AppCompatActivity
      */
     private void initData()
     {
+        /*
         user = new User(false, "John Smith", "JohnSmith@average.com");
         employee = new Employee(user.name, "1, 2, 3", null, null);
+        */
 
-        // TODO: import user and employee from other activity.
-        //user = getIntent().getParcelableExtra("user");
-        //employee = getIntent().getParcelableExtra("employee");
+        user = getIntent().getParcelableExtra("user");
+        employee = getIntent().getParcelableExtra("employee");
 
         if(employee == null)
         {

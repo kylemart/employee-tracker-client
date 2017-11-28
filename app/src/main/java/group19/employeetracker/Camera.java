@@ -103,7 +103,7 @@ public class Camera extends AppCompatActivity
      */
     private void sendFailed()
     {
-        new Toast(getApplicationContext()).makeText(getApplicationContext(), "To continue, you must take a picture to send.", Toast.LENGTH_LONG).show();
+        new Toast(getApplicationContext()).makeText(getApplicationContext(), "Must take picture", Toast.LENGTH_LONG).show();
     }
 
     /**
