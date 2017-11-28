@@ -93,14 +93,14 @@ public class LogIn extends AppCompatActivity
                                 );
 
                                 if (user.isAdmin) {
+                                    User.createUser(getApplicationContext(),user.isAdmin, user.firstName, user.lastName, user.email);
                                     LogIn.this.startActivity(
                                         new Intent(LogIn.this, NavActivity.class)
-                                            .putExtra("user", user)
                                     );
                                 } else {
+                                    User.createUser(getApplicationContext(),user.isAdmin, user.firstName, user.lastName, user.email);
                                     LogIn.this.startActivity(
                                         new Intent(LogIn.this, Camera.class)
-                                            .putExtra("user", user)
                                     );
                                 }
                             }
@@ -128,8 +128,8 @@ public class LogIn extends AppCompatActivity
             mService = binder.getService();
 
             if(mService.isRunning()) {
+                User.createUser(getApplicationContext(),user.isAdmin, user.firstName, user.lastName, user.email);
                 Intent intent = new Intent(LogIn.this, NavActivity.class);
-                intent.putExtra("user", user);
                 startActivity(intent);
             }
 
