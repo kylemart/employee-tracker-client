@@ -131,6 +131,7 @@ public class Camera extends AppCompatActivity
         if(bitmap != null)
         {
             bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+
             pictureView.setImageBitmap(bitmap);
 
             pictureTaken = true;

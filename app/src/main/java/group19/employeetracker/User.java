@@ -3,8 +3,11 @@ package group19.employeetracker;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.io.ByteArrayOutputStream;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -76,13 +79,6 @@ public class User extends Admin implements Parcelable {
                 pref.getString("firstName", "FirstName"),
                 pref.getString("lastName", "LastName"),
                 pref.getString("email", "Default@gmail.com"));
-    }
-
-    public static void deleteUser(Context context)
-    {
-        SharedPreferences pref = context.getSharedPreferences("User", MODE_PRIVATE);
-
-        pref.edit().clear().commit();
     }
 
     public static void createUser(Context context, boolean type, String firstName, String lastName, String email)

@@ -8,4 +8,9 @@
     tools:context="group19.employeetracker.NavActivity"
     tools:showIn="@layout/app_bar_main2">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/content_frame"/>
+
 </android.support.constraint.ConstraintLayout>

@@ -32,12 +32,16 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
 
     BackgroundGPS mService;
 
+    Context ctx;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        user = User.getUser(getApplicationContext());
+        ctx = this;
+
+        //user = User.getUser(getApplicationContext());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -51,12 +55,13 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Intent intent = new Intent(this, BackgroundGPS.class);
+        /*Intent intent = new Intent(this, BackgroundGPS.class);
         startService(intent);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);*/
 
-        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        getLayoutInflater().inflate(R.layout.content_main2, contentFrameLayout);
+        /*Intent intent = new Intent(getApplicationContext(), GroupActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);*/
 
         View navHeader = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
 
@@ -68,7 +73,9 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
         Button logout = (Button) navHeader.findViewById(R.id.logout);
 
         logout.setOnClickListener(v -> {
-            stopService(intent);
+            //stopService(intent);
+
+            PrefUtil.deleteUser(ctx);
 
             Intent intents = new Intent(NavActivity.this, LogIn.class);
             intents.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
@@ -137,7 +144,7 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         } else if (id == R.id.groupList) {
-            Intent intent = new Intent(getApplicationContext(), testlist.class);
+            Intent intent = new Intent(getApplicationContext(), GroupActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }

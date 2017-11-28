@@ -16,6 +16,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public final class BackendServiceUtil {
 
@@ -23,7 +24,7 @@ public final class BackendServiceUtil {
     private static final String LOG_TAG = BackendServiceUtil.class.getSimpleName();
 
     /** Base URL of the backend service. */
-    private static final String BASE_URL = "http://192.168.43.165";
+    private static final String BASE_URL = "https://tracker.osyr.is";
 
     /** HTTP client used for issuing requests to the backend service. */
     private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();

@@ -36,7 +36,6 @@
         android:id="@+id/toCameraAction"
         android:layout_width="150dp"
         android:layout_height="1px"
-
         android:layout_gravity="center"
         android:layout_weight="1"
         android:layout_margin="5dp"

@@ -16,7 +16,7 @@ import org.json.JSONObject;
 
 public class SignUp extends AppCompatActivity
 {
-    private static final String LOG_TAG = LogIn.class.getSimpleName();
+    private static final String LOG_TAG = SignUp.class.getSimpleName();
 
     User user;
     Context ctx;
@@ -33,15 +33,6 @@ public class SignUp extends AppCompatActivity
         final EditText etpass1 = (EditText)findViewById(R.id.etpass1);
         final EditText etpass2 = (EditText)findViewById(R.id.etpass2);
         final Button bcreateaccount = (Button) findViewById(R.id.bcreateaccount);
-
-        // DEBUG
-        etfirstName.setText("John");
-        etlastName.setText("Doe");
-        etemail.setText("test123@example.com");
-        etpass1.setText("hunter2");
-        etpass2.setText("hunter2");
-        // DEBUG
-
 
         bcreateaccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +53,7 @@ public class SignUp extends AppCompatActivity
 
                     new AsyncTask<JSONObject, Void, JSONObject>() {
                         protected JSONObject doInBackground(JSONObject[] params) {
-                            return BackendServiceUtil.post("signup", params[0], PrefUtil.getAuth(ctx));
+                            return BackendServiceUtil.post("signup", params[0]);
                         }
                         protected void onPostExecute(JSONObject response) {
                             if (response.optBoolean("success")) {
@@ -82,14 +73,14 @@ public class SignUp extends AppCompatActivity
                                     );
 
                                     if (user.isAdmin) {
+                                        User.createUser(getApplicationContext(),user.isAdmin, user.firstName, user.lastName, user.email);
                                         SignUp.this.startActivity(
-                                            new Intent(SignUp.this, NavActivity.class)
-                                                .putExtra("user", user)
+                                                new Intent(SignUp.this, NavActivity.class)
                                         );
                                     } else {
+                                        User.createUser(getApplicationContext(),user.isAdmin, user.firstName, user.lastName, user.email);
                                         SignUp.this.startActivity(
-                                            new Intent(SignUp.this, Camera.class)
-                                                .putExtra("user", user)
+                                                new Intent(SignUp.this, Camera.class)
                                         );
                                     }
                                 }

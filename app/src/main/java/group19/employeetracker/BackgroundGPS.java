@@ -3,14 +3,17 @@ package group19.employeetracker;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -25,11 +28,17 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class BackgroundGPS extends Service {
+    private static final String LOG_TAG = BackgroundGPS.class.getSimpleName();
+
+    Context ctx;
+
     private boolean running = false;
 
     private final IBinder mBinder = new LocalBinder();
 
-    private final long TEN_MINUTES = 600000;
+    private final long ONE_SECOND = 1000;
+    private final long TEN_SECONDS = ONE_SECOND*10;
+
 
     FusedLocationProviderClient mFusedLocationClient;
     LocationCallback mLocationCallback;
@@ -47,21 +56,34 @@ public class BackgroundGPS extends Service {
     private void sendLocation(double lat, double lng) {
         currentLoc = new LatLng(lat, lng);
 
-        /*JSONObject json = new JSONObject();
+        Log.d("BACKGROUNDGPS", lat + ", " + lng);
+
+        JSONObject payload = new JSONObject();
         try {
-            json.put("lat", lat);
-            json.put("lng", lng);
+            payload
+                .put("lat", lat)
+                .put("lng", lng);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d(LOG_TAG, "JSONException", e);
         }
 
-        try {
-            BackendServiceUtil.post("location/report", json);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+        Context ctx = this;
 
-        Log.d("BACKGROUNDGPS", lat + ", " + lng);
+        new AsyncTask<JSONObject, Void, JSONObject>() {
+            protected JSONObject doInBackground(JSONObject[] params) {
+                return BackendServiceUtil.post("report", params[0], PrefUtil.getAuth(ctx));
+            }
+            protected void onPostExecute(JSONObject response) {
+                if (response.optBoolean("success")) {
+                } else {
+                    Toast.makeText(
+                            getApplicationContext(),
+                            response.optString("message", "Could not send location! :("),
+                            Toast.LENGTH_LONG
+                    ).show();
+                }
+            }
+        }.execute(payload);
     }
 
     public LatLng getLocation() {
@@ -117,8 +139,8 @@ public class BackgroundGPS extends Service {
         }
 
         LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(TEN_MINUTES);
-        mLocationRequest.setMaxWaitTime(TEN_MINUTES);
+        mLocationRequest.setInterval(TEN_SECONDS);
+        mLocationRequest.setMaxWaitTime(TEN_SECONDS);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
