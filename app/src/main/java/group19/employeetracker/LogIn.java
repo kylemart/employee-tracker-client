@@ -92,11 +92,6 @@ public class LogIn extends AppCompatActivity
                                     response.optString("email")
                                 );
 
-                                Log.d("DEBUG", "firstName: " + user.firstName);
-                                Log.d("DEBUG", "lastName: " + user.lastName);
-                                Log.d("DEBUG", "email: " + user.email);
-                                Log.d("DEBUG", "isAdmin: " + String.valueOf(user.isAdmin));
-
                                 if (user.isAdmin) {
                                     LogIn.this.startActivity(
                                         new Intent(LogIn.this, NavActivity.class)
@@ -110,13 +105,11 @@ public class LogIn extends AppCompatActivity
                                 }
                             }
                         } else {
-                            new Toast(getApplicationContext())
-                                .makeText(
-                                    getApplicationContext(),
-                                    response.optString("message", "Invalid login :("),
-                                    Toast.LENGTH_LONG
-                                )
-                                .show();
+                            Toast.makeText(
+                                getApplicationContext(),
+                                response.optString("message", "Invalid login :("),
+                                Toast.LENGTH_LONG
+                            ).show();
                         }
                     }
                 }.execute(payload);
