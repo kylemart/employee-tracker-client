@@ -9,14 +9,16 @@ import android.os.Parcelable;
 
 public class User extends Admin implements Parcelable {
     public boolean type;
-    public String name;
+    public String firstName;
+    public String lastName;
     public String email;
 
     private Bitmap pic;
 
-    User(boolean type, String name, String email) {
-        this.type = type;
-        this.name = name;
+    User(boolean isAdmin, String firstName, String lastName, String email) {
+        this.type = isAdmin;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
     }
 
@@ -36,14 +38,16 @@ public class User extends Admin implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByte(this.type ? (byte) 1 : (byte) 0);
-        dest.writeString(this.name);
+        dest.writeString(this.firstName);
+        dest.writeString(this.lastName);
         dest.writeString(this.email);
         dest.writeParcelable(this.pic, flags);
     }
 
     protected User(Parcel in) {
         this.type = in.readByte() != 0;
-        this.name = in.readString();
+        this.firstName = in.readString();
+        this.lastName = in.readString();
         this.email = in.readString();
         this.pic = in.readParcelable(Bitmap.class.getClassLoader());
     }

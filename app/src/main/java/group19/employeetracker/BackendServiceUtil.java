@@ -1,5 +1,7 @@
 package group19.employeetracker;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -14,6 +16,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public final class BackendServiceUtil {
 
@@ -39,13 +43,18 @@ public final class BackendServiceUtil {
      * @return the response from the backend service
      * @throws IOException if there was a problem extracting
      */
-    public static JSONObject get(String route) {
+    public static JSONObject get(String route, boolean useAuth) {
         String jsonResult = null;
 
-        Request request = new Request.Builder()
+        Request.Builder builder = new Request.Builder()
                 .url(createUrl(route))
-                .get()
-                .build();
+                .get();
+
+        if (useAuth) {
+            builder.header("Authorization", "");
+        }
+
+        Request request = builder.build();
 
         try {
             Response response = executeRequest(request);
@@ -69,7 +78,7 @@ public final class BackendServiceUtil {
      * @param json the JSON to post to the backend service
      * @return the response from the backend service
      */
-    public static JSONObject post(String route, boolean useAuth, JSONObject json) {
+    public static JSONObject post(Context ctx, String route, boolean useAuth, JSONObject json) {
         String jsonResult = null;
 
         RequestBody requestBody = RequestBody.create(JSON, json.toString());
@@ -79,7 +88,8 @@ public final class BackendServiceUtil {
                 .post(requestBody);
 
         if (useAuth) {
-            builder.header("Authorization", "YouGotMeTalbot?");
+            SharedPreferences pref = ctx.getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
+            builder.header("Authorization", pref.getString("token", ""));
         }
 
         Request request = builder.build();

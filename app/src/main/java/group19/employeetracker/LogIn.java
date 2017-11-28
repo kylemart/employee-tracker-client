@@ -1,6 +1,8 @@
 package group19.employeetracker;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,9 +11,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
 public class LogIn extends AppCompatActivity
 {
     User user;
+    Context ctx;
 
     @Override
     //XML is loaded into a View resource
@@ -19,6 +27,7 @@ public class LogIn extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        ctx = this;
         setContentView(R.layout.activity_log_in);
 
         //Created instanceo of view object and captured in layout
@@ -41,7 +50,31 @@ public class LogIn extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                logIn();
+                String email = etusername.getText().toString();
+                String password = etpassword.getText().toString();
+
+                JSONObject jsonObj = new JSONObject();
+                try {
+                    jsonObj.put("email", email);
+                    jsonObj.put("password", password);
+                } catch (JSONException e) {}
+
+                JSONObject response = BackendServiceUtil.post(ctx, "login", false, jsonObj);
+
+                if (response.optBoolean("success")) {
+                    String token = response.optString("token");
+                    if (token != null && token.length() > 0) {
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("token", token);
+                    }
+                } else {
+                    String errorMsg = response.optString("message");
+                    if (errorMsg.length() == 0) {
+                        errorMsg = "Invalid login";
+                    }
+                    new Toast(getApplicationContext()).makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -54,7 +87,7 @@ public class LogIn extends AppCompatActivity
     {
         if(!checkData())
         {
-            new Toast(getApplicationContext()).makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG).show();
+
             return;
         }
 
@@ -86,7 +119,7 @@ public class LogIn extends AppCompatActivity
     {
         //TODO: Retrieve user information. If invalid return false;
 
-        user = new User(false, "John Smith", "JohnSmith@gmail.com");
+        user = new User(false, "John", "Smith", "JohnSmith@gmail.com");
 
         return true;
     }
