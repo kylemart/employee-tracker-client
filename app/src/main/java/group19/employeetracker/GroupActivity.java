@@ -50,8 +50,6 @@ public class GroupActivity extends AppCompatActivity
 
             Log.d(LOG_TAG, "Will eventually launch new activity!");
 
-            //String groupId = clickedGroupListItem.getId();
-
             int groupId = clickedGroupListItem.getId();
 
             // Create intent and switch to map activity
