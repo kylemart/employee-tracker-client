@@ -84,11 +84,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(toCamera);
                 */
 
-                SharedPreferences pref = getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
-                pref.edit().putBoolean("type", false).apply();
-                pref.edit().putString("email", "JohnSmith@hotmail.com").apply();
-                pref.edit().putString("firstName", "Test").apply();
-                pref.edit().putString("lastName", "GuyMan").apply();
+                User.createUser(getApplicationContext(), false, "Test", "GuyMan", "TestGuyMan@email.com");
 
                 Intent toCamera = new Intent(MainActivity.this, Camera.class);
                 startActivity(toCamera);

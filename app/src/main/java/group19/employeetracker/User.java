@@ -1,8 +1,12 @@
 package group19.employeetracker;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import static android.content.Context.MODE_PRIVATE;
 
 //TODO: If you change anything in here make sure to generate parcelable
 // The plugin for this can be found here: https://github.com/mcharmas/android-parcelable-intellij-plugin
@@ -63,4 +67,31 @@ public class User extends Admin implements Parcelable {
             return new User[size];
         }
     };
+
+    public static User getUser(Context context)
+    {
+        SharedPreferences pref = context.getSharedPreferences("User", MODE_PRIVATE);
+
+        return new User(pref.getBoolean("type", false),
+                pref.getString("firstName", "FirstName"),
+                pref.getString("lastName", "LastName"),
+                pref.getString("email", "Default@gmail.com"));
+    }
+
+    public static void deleteUser(Context context)
+    {
+        SharedPreferences pref = context.getSharedPreferences("User", MODE_PRIVATE);
+
+        pref.edit().clear().commit();
+    }
+
+    public static void createUser(Context context, boolean type, String firstName, String lastName, String email)
+    {
+        SharedPreferences pref = context.getSharedPreferences("User", MODE_PRIVATE);
+        
+        pref.edit().putBoolean("type", type).apply();
+        pref.edit().putString("email", email).apply();
+        pref.edit().putString("firstName", firstName).apply();
+        pref.edit().putString("lastName", lastName).apply();
+    }
 }

@@ -46,13 +46,7 @@ public class Profile extends AppCompatActivity
      */
     private void initData()
     {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
-        user = new User(
-                pref.getBoolean("type", false),
-                pref.getString("firstName", null),
-                pref.getString("lastName", null),
-                pref.getString("email", null)
-        );
+        user = User.getUser(getApplicationContext());
         employee = getIntent().getParcelableExtra("employee");
 
         if(employee == null)

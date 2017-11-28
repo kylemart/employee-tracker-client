@@ -34,11 +34,7 @@ public class Camera extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
-        user = new User(pref.getBoolean("type", false),
-                        pref.getString("firstName", "FirstName"),
-                        pref.getString("lastName", "LastName"),
-                        pref.getString("email", "Default@gmail.com"));
+        user = User.getUser(getApplicationContext());
 
         pictureTaken = false;
 
