@@ -301,7 +301,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
 
                             String imgData = employee.getString("profile_img");
                             if (imgData.length() == 0) {
-                                imgData = Employee.encodePic(BitmapFactory.decodeResource(ctx.getResources(), R.drawable.a));
+                                imgData = Employee.encodePic(BitmapFactory.decodeResource(ctx.getResources(), R.drawable.default_profile));
                             }
 
                             Bitmap pic = Employee.decodePic(imgData);

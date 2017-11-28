@@ -53,7 +53,7 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
         View navHeader = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
 
         if(user != null)
-            ((ImageView) navHeader.findViewById(R.id.navImageView)).setImageResource(android.R.color.transparent);
+            ((ImageView) navHeader.findViewById(R.id.navImageView)).setImageResource(R.drawable.default_profile);
         ((TextView) navHeader.findViewById(R.id.name)).setText(user.firstName + " " + user.lastName);
         ((TextView) navHeader.findViewById(R.id.email)).setText(user.email);
 
@@ -127,7 +127,7 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        
+
         if (id == R.id.userProfile) {
             startActivity(new Intent(getApplicationContext(), Profile.class));
         } else if (id == R.id.employeeList) {
