@@ -114,7 +114,7 @@ public class Camera extends AppCompatActivity
      */
     private void toMap()
     {
-        Intent toOptions = new Intent(Camera.this, MapsActivity.class);
+        Intent toOptions = new Intent(Camera.this, NavActivity.class);
         toOptions.putExtra("user", user);
         startActivity(toOptions);
     }

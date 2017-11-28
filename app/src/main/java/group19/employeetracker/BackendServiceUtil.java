@@ -43,7 +43,7 @@ public final class BackendServiceUtil {
      * @return the response from the backend service
      * @throws IOException if there was a problem extracting
      */
-    public static JSONObject get(String route, boolean useAuth) {
+    public static JSONObject get(Context ctx, String route, boolean useAuth) {
         String jsonResult = null;
 
         Request.Builder builder = new Request.Builder()
@@ -51,7 +51,8 @@ public final class BackendServiceUtil {
                 .get();
 
         if (useAuth) {
-            builder.header("Authorization", "");
+            SharedPreferences pref = ctx.getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
+            builder.header("Authorization", pref.getString("token", ""));
         }
 
         Request request = builder.build();

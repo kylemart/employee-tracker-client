@@ -3,7 +3,7 @@ package group19.employeetracker;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
-public class testlist extends Main2Activity {
+public class testlist extends NavActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

@@ -1,8 +1,11 @@
 package group19.employeetracker;
 
 import android.content.Context;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +23,9 @@ public class LogIn extends AppCompatActivity
 {
     User user;
     Context ctx;
+
+    Intent serviceIntent;
+    BackgroundGPS mService;
 
     @Override
     //XML is loaded into a View resource
@@ -64,9 +70,10 @@ public class LogIn extends AppCompatActivity
                 if (response.optBoolean("success")) {
                     String token = response.optString("token");
                     if (token != null && token.length() > 0) {
-                        SharedPreferences pref = getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = pref.edit();
-                        editor.putString("token", token);
+                        getApplicationContext().getSharedPreferences("User", MODE_PRIVATE)
+                            .edit()
+                            .putString("token", token)
+                            .apply();
                     }
                 } else {
                     String errorMsg = response.optString("message");
@@ -102,7 +109,7 @@ public class LogIn extends AppCompatActivity
         // User is boss
         else
         {
-            Intent i = new Intent(LogIn.this, MapsActivity.class);
+            Intent i = new Intent(LogIn.this, NavActivity.class);
             i.putExtra("user", user);
 
             LogIn.this.startActivity(i);
@@ -123,4 +130,31 @@ public class LogIn extends AppCompatActivity
 
         return true;
     }
+
+    protected void onDestroy() {
+        super.onDestroy();
+
+        /*if(!mService.isRunning())
+            stopService(serviceIntent);*/
+    }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            BackgroundGPS.LocalBinder binder = (BackgroundGPS.LocalBinder) service;
+            mService = binder.getService();
+
+            if(mService.isRunning()) {
+                Intent intent = new Intent(LogIn.this, NavActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+            }
+
+            unbindService(mConnection);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+        }
+    };
 }

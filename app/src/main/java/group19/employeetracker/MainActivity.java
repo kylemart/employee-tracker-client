@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity
                 editor.putString("name", "John Smith");
                 editor.commit();
 
-                Intent toMap = new Intent(MainActivity.this, Main2Activity.class);
+                Intent toMap = new Intent(MainActivity.this, NavActivity.class);
                 startActivity(toMap);
             }
         });
