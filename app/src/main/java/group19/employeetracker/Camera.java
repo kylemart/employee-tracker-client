@@ -59,7 +59,7 @@ public class Camera extends AppCompatActivity
         });
 
         welcomeText = (TextView) findViewById(R.id.welcomeText);
-        welcomeText.setText("Welcome " + user.name);
+        welcomeText.setText("Welcome " + user.firstName + " " + user.lastName);
     }
 
     /**
