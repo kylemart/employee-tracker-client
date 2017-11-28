@@ -73,7 +73,7 @@ public class LogIn extends AppCompatActivity
 
                 new AsyncTask<JSONObject, Void, JSONObject>() {
                     protected JSONObject doInBackground(JSONObject[] params) {
-                        return BackendServiceUtil.post("route", params[0], PrefUtil.getAuth(ctx));
+                        return BackendServiceUtil.post("login", params[0], PrefUtil.getAuth(ctx));
                     }
                     protected void onPostExecute(JSONObject response) {
                         if (response.optBoolean("success")) {
@@ -113,7 +113,7 @@ public class LogIn extends AppCompatActivity
                             new Toast(getApplicationContext())
                                 .makeText(
                                     getApplicationContext(),
-                                    response.optString("message", "Invalid login"),
+                                    response.optString("message", "Invalid login :("),
                                     Toast.LENGTH_LONG
                                 )
                                 .show();
@@ -126,9 +126,6 @@ public class LogIn extends AppCompatActivity
 
     protected void onDestroy() {
         super.onDestroy();
-
-        /*if(!mService.isRunning())
-            stopService(serviceIntent);*/
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
