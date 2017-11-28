@@ -38,13 +38,8 @@ public class LogIn extends AppCompatActivity
         setContentView(R.layout.activity_log_in);
 
         //Created instanceo of view object and captured in layout
-        final EditText etusername = (EditText)findViewById(R.id.etEmail);
+        final EditText etemail = (EditText)findViewById(R.id.etEmail);
         final EditText etpassword = (EditText)findViewById(R.id.etpassword);
-
-        // DEBUG
-        etusername.setText("test@example.com");
-        etpassword.setText("hunter2");
-        // DEBUG
 
         final Button blogin = (Button) findViewById(R.id.blogin);
         final TextView signup = (TextView) findViewById(R.id.signup);
@@ -65,7 +60,7 @@ public class LogIn extends AppCompatActivity
                 JSONObject payload = new JSONObject();
                 try {
                     payload
-                        .put("email", etusername.getText().toString())
+                        .put("email", etemail.getText().toString())
                         .put("password", etpassword.getText().toString());
                 } catch (JSONException e) {
                     Log.d(LOG_TAG, "JSONException", e);
