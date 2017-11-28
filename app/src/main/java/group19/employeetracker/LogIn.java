@@ -64,9 +64,10 @@ public class LogIn extends AppCompatActivity
                 if (response.optBoolean("success")) {
                     String token = response.optString("token");
                     if (token != null && token.length() > 0) {
-                        SharedPreferences pref = getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = pref.edit();
-                        editor.putString("token", token);
+                        getApplicationContext().getSharedPreferences("User", MODE_PRIVATE)
+                            .edit()
+                            .putString("token", token)
+                            .apply();
                     }
                 } else {
                     String errorMsg = response.optString("message");
