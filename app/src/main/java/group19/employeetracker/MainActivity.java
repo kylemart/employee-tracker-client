@@ -85,11 +85,10 @@ public class MainActivity extends AppCompatActivity
                 */
 
                 SharedPreferences pref = getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
-                SharedPreferences.Editor editor = pref.edit();
-                editor.putBoolean("type", true);
-                editor.putString("email", "JohnSmith@hotmail.com");
-                editor.putString("name", "John Smith");
-                editor.commit();
+                pref.edit().putBoolean("type", false).apply();
+                pref.edit().putString("email", "JohnSmith@hotmail.com").apply();
+                pref.edit().putString("firstName", "Test").apply();
+                pref.edit().putString("lastName", "GuyMan").apply();
 
                 Intent toCamera = new Intent(MainActivity.this, Camera.class);
                 startActivity(toCamera);
@@ -102,11 +101,10 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 SharedPreferences pref = getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
-                SharedPreferences.Editor editor = pref.edit();
-                editor.putBoolean("type", false);
-                editor.putString("email", "TestEmployee@email.com");
-                editor.putString("name", "John Smith");
-                editor.commit();
+                pref.edit().putBoolean("type", false).apply();
+                pref.edit().putString("email", "JohnSmith@hotmail.com").apply();
+                pref.edit().putString("firstName", "John").apply();
+                pref.edit().putString("lastName", "Smith").apply();
 
                 Intent toProfile = new Intent(MainActivity.this, Profile.class);
                 Employee employee = new Employee("Test Employee", "TestEmployee@email.com", "1, 2, 3", null, null);
@@ -121,11 +119,10 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 SharedPreferences pref = getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
-                SharedPreferences.Editor editor = pref.edit();
-                editor.putBoolean("type", false);
-                editor.putString("email", "JohnSmith@hotmail.com");
-                editor.putString("name", "John Smith");
-                editor.commit();
+                pref.edit().putBoolean("type", false).apply();
+                pref.edit().putString("email", "JohnSmith@hotmail.com").apply();
+                pref.edit().putString("firstName", "John").apply();
+                pref.edit().putString("lastName", "Smith").apply();
 
                 Intent toMap = new Intent(MainActivity.this, NavActivity.class);
                 startActivity(toMap);
