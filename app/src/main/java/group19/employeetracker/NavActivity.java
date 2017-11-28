@@ -4,12 +4,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.IntentCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,11 +16,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import javax.security.auth.login.LoginException;
+import org.w3c.dom.Text;
 
 public class NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -41,7 +36,7 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
 
         ctx = this;
 
-        //user = User.getUser(getApplicationContext());
+        user = User.getUser(getApplicationContext());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -58,9 +53,9 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
         View navHeader = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
 
         if(user != null)
-            ((ImageView) navHeader.findViewById(R.id.imageView)).setImageBitmap(user.getPic());
-        ((TextView) navHeader.findViewById(R.id.name)).setText("Hello World");
-        ((TextView) navHeader.findViewById(R.id.email)).setText("Hello@World.com");
+            ((ImageView) navHeader.findViewById(R.id.navImageView)).setImageResource(android.R.color.transparent);
+        ((TextView) navHeader.findViewById(R.id.name)).setText(user.firstName + " " + user.lastName);
+        ((TextView) navHeader.findViewById(R.id.email)).setText(user.email);
 
         Intent intent = new Intent(this, BackgroundGPS.class);
         startService(intent);
@@ -132,7 +127,7 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-
+        
         if (id == R.id.userProfile) {
             startActivity(new Intent(getApplicationContext(), Profile.class));
         } else if (id == R.id.employeeList) {
