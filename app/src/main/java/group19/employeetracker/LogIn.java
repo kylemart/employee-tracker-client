@@ -73,7 +73,7 @@ public class LogIn extends AppCompatActivity
 
                 new AsyncTask<JSONObject, Void, JSONObject>() {
                     protected JSONObject doInBackground(JSONObject[] params) {
-                        return BackendServiceUtil.post(ctx, "login", false, params[0]);
+                        return BackendServiceUtil.post("route", params[0], PrefUtil.getAuth(ctx));
                     }
                     protected void onPostExecute(JSONObject response) {
                         if (response.optBoolean("success")) {
