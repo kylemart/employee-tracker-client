@@ -12,7 +12,7 @@ import static android.content.Context.MODE_PRIVATE;
 // The plugin for this can be found here: https://github.com/mcharmas/android-parcelable-intellij-plugin
 
 public class User extends Admin implements Parcelable {
-    public boolean type;
+    public boolean isAdmin;
     public String firstName;
     public String lastName;
     public String email;
@@ -20,7 +20,7 @@ public class User extends Admin implements Parcelable {
     private Bitmap pic;
 
     User(boolean isAdmin, String firstName, String lastName, String email) {
-        this.type = isAdmin;
+        this.isAdmin = isAdmin;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -41,7 +41,7 @@ public class User extends Admin implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte(this.type ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isAdmin ? (byte) 1 : (byte) 0);
         dest.writeString(this.firstName);
         dest.writeString(this.lastName);
         dest.writeString(this.email);
@@ -49,7 +49,7 @@ public class User extends Admin implements Parcelable {
     }
 
     protected User(Parcel in) {
-        this.type = in.readByte() != 0;
+        this.isAdmin = in.readByte() != 0;
         this.firstName = in.readString();
         this.lastName = in.readString();
         this.email = in.readString();

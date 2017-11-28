@@ -107,7 +107,7 @@ public class Profile extends AppCompatActivity
     private void initProfileButton()
     {
         profileButton = (Button) findViewById(R.id.profileButton);
-        final boolean isBoss = user.type;
+        final boolean isBoss = user.isAdmin;
 
         if(!isBoss)
         {
