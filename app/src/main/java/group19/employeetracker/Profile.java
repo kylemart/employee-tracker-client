@@ -127,7 +127,6 @@ public class Profile extends AppCompatActivity
         {
             profileButton.setText("Change Privacy Setting");
         }
-
         profileButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
