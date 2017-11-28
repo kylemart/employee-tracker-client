@@ -27,7 +27,9 @@ public final class BackendServiceUtil {
     private static final String BASE_URL = "https://tracker.osyr.is";
 
     /** HTTP client used for issuing requests to the backend service. */
-    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
+    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
+            .retryOnConnectionFailure(true)
+            .build();
 
     /** MediaType used for creating JSON request bodies. */
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -73,7 +75,9 @@ public final class BackendServiceUtil {
 
     private static JSONObject executeRequest(Request request) {
         try {
+            Log.d(LOG_TAG, "Bleep!");
             Response response = HTTP_CLIENT.newCall(request).execute();
+            Log.d(LOG_TAG, "Meep!");
             String json = response.body().string();
             return new JSONObject(json);
         } catch (IOException e) {

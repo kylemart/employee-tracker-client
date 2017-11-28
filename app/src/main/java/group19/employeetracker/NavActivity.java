@@ -131,7 +131,7 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
         if (id == R.id.userProfile) {
             startActivity(new Intent(getApplicationContext(), Profile.class));
         } else if (id == R.id.employeeList) {
-            Intent intent = new Intent(getApplicationContext(), testlist.class);
+            Intent intent = new Intent(getApplicationContext(), EmployeeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         } else if (id == R.id.groupList) {

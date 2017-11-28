@@ -58,6 +58,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".SignUp"
             android:screenOrientation="portrait"/>
+        <activity android:name=".EmployeeActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".NavActivity"
             android:label="@string/title_activity_nav"
