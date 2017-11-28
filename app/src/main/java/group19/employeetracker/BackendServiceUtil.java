@@ -65,18 +65,24 @@ public final class BackendServiceUtil {
      * Posts a JSON body to the backend service at the specified route.
      *
      * @param route the backend service route to target
+     * @param useAuth use auth if true; don't otherwise
      * @param json the JSON to post to the backend service
      * @return the response from the backend service
      */
-    public static JSONObject post(String route, JSONObject json) {
+    public static JSONObject post(String route, boolean useAuth, JSONObject json) {
         String jsonResult = null;
 
         RequestBody requestBody = RequestBody.create(JSON, json.toString());
 
-        Request request = new Request.Builder()
+        Request.Builder builder = new Request.Builder()
                 .url(createUrl(route))
-                .post(requestBody)
-                .build();
+                .post(requestBody);
+
+        if (useAuth) {
+            builder.header("Authorization", "YouGotMeTalbot?");
+        }
+
+        Request request = builder.build();
 
         try {
             Response response = executeRequest(request);
