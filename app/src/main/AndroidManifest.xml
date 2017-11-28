@@ -48,7 +48,13 @@
 
         <activity android:name=".DatabaseIOTest" />
         <activity android:name=".LogIn" />
-        <activity android:name=".SignUp"></activity>
+        <activity android:name=".SignUp" />
+        <activity
+            android:name=".Main2Activity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme"
+            android:launchMode="singleTask" />
+        <activity android:name=".testlist" android:launchMode="singleTask"/>
     </application>
 
 </manifest>

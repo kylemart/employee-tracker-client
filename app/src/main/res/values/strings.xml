@@ -18,4 +18,5 @@
     <string name="sign_up_create_account">Create Account</string>
     <string name="sign_up_password_hint">Password</string>
     <string name="sign_up_second_password_hint">Password (again)</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>
