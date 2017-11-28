@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -123,8 +124,17 @@ public class Profile extends AppCompatActivity
             {
                 if(!isBoss)
                 {
-                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(takePictureIntent, 0);
+                    // User is viewing own profile.
+                    if(user.email.equals(employee.email))
+                    {
+                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(takePictureIntent, 0);
+                    }
+                    // User is viewing a different profile.
+                    else
+                    {
+                        new Toast(getApplicationContext()).makeText(getApplicationContext(), "Users can only change their own picture", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else
                 {
