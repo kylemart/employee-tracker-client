@@ -1,13 +1,16 @@
 package group19.employeetracker;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -15,11 +18,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 public class Camera extends AppCompatActivity
 {
+    private static final String LOG_TAG = Camera.class.getSimpleName();
+
     User user;
+    Context ctx;
 
     private boolean pictureTaken;
 
@@ -32,6 +40,7 @@ public class Camera extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        ctx = this;
         setContentView(R.layout.activity_camera);
 
         user = User.getUser(getApplicationContext());
@@ -92,11 +101,7 @@ public class Camera extends AppCompatActivity
     private void sendSuccessful()
     {
         pictureTaken = false;
-
         pictureView.setImageResource(android.R.color.transparent);
-
-        // TODO: Send picture to database
-
         toMap();
     }
 
@@ -131,6 +136,30 @@ public class Camera extends AppCompatActivity
         if(bitmap != null)
         {
             bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+
+            JSONObject payload = new JSONObject();
+            try {
+                payload.put("data", Employee.encodePic(bitmap));
+            } catch (JSONException e) {
+                Log.d(LOG_TAG, "JSONException", e);
+            }
+
+            new AsyncTask<JSONObject, Void, JSONObject>() {
+                protected JSONObject doInBackground(JSONObject[] params) {
+                    return BackendServiceUtil.post("user/update/verify", params[0], PrefUtil.getAuth(ctx));
+                }
+                protected void onPostExecute(JSONObject response) {
+                    if (response.optBoolean("success")) {
+
+                    } else {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                response.optString("message", "Could not connect :("),
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+                }
+            }.execute(payload);
 
             pictureView.setImageBitmap(bitmap);
 
