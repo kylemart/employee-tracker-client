@@ -52,6 +52,8 @@ public class GroupActivity extends AppCompatActivity
 
             int groupId = clickedGroupListItem.getId();
 
+            //int groupId = clickedGroupListItem.getId();
+
             // Create intent and switch to map activity
         });
 
