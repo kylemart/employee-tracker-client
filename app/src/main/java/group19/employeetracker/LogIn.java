@@ -101,17 +101,17 @@ public class LogIn extends AppCompatActivity
         // User is employee
         if(!user.type)
         {
-            Intent i = new Intent(LogIn.this, Camera.class);
-            i.putExtra("user", user);
+            User.createUser(getApplicationContext(), user.type, user.firstName, user.lastName, user.email);
 
+            Intent i = new Intent(LogIn.this, Camera.class);
             LogIn.this.startActivity(i);
         }
         // User is boss
         else
         {
-            Intent i = new Intent(LogIn.this, NavActivity.class);
-            i.putExtra("user", user);
+            User.createUser(getApplicationContext(), user.type, user.firstName, user.lastName, user.email);
 
+            Intent i = new Intent(LogIn.this, NavActivity.class);
             LogIn.this.startActivity(i);
         }
 
