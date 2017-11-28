@@ -39,14 +39,20 @@ public final class BackendServiceUtil {
      * @return the response from the backend service
      * @throws IOException if there was a problem extracting
      */
-    public static JSONObject get(String route) throws IOException {
+    public static JSONObject get(String route) {
+        String jsonResult = null;
+
         Request request = new Request.Builder()
                 .url(createUrl(route))
                 .get()
                 .build();
 
-        Response response = executeRequest(request);
-        String jsonResult = response.body().string();
+        try {
+            Response response = executeRequest(request);
+            jsonResult = response.body().string();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem performing GET request", e);
+        }
 
         try {
             return new JSONObject(jsonResult);
@@ -63,7 +69,7 @@ public final class BackendServiceUtil {
      * @return the response from the backend service
      */
     public static JSONObject post(String route, JSONObject json) {
-        String jsonResult = "";
+        String jsonResult = null;
 
         RequestBody requestBody = RequestBody.create(JSON, json.toString());
 
@@ -93,12 +99,7 @@ public final class BackendServiceUtil {
      * @return the response
      */
     private static Response executeRequest(Request request) throws IOException {
-        try {
-            return HTTP_CLIENT.newCall(request).execute();
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem executing request", e);
-            return null;
-        }
+        return HTTP_CLIENT.newCall(request).execute();
     }
 
     /**
