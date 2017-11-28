@@ -1,6 +1,7 @@
 package group19.employeetracker;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -45,7 +46,9 @@ public class Profile extends AppCompatActivity
      */
     private void initData()
     {
-        user = getIntent().getParcelableExtra("user");
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        user = new User(pref.getBoolean("type", false), pref.getString("name", null), pref.getString("email", null));
         employee = getIntent().getParcelableExtra("employee");
 
         if(employee == null)
