@@ -126,7 +126,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        user = getIntent().getParcelableExtra("user");
+        user = User.getUser(getApplicationContext());
         //groupsStr = getIntent().getStringExtra("groups");
 
         if (savedInstanceState != null) {
@@ -437,7 +437,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         Employee employee = (Employee) marker.getTag();
 
         Intent intent = new Intent(this, Profile.class);
-        intent.putExtra("user", user);
         intent.putExtra("employee", employee);
 
         startActivity(intent);

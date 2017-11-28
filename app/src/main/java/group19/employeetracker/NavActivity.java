@@ -37,7 +37,7 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        user = getIntent().getParcelableExtra("user");
+        user = User.getUser(getApplicationContext());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

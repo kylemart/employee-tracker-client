@@ -1,6 +1,7 @@
 package group19.employeetracker;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -33,7 +34,7 @@ public class Camera extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        user = getIntent().getParcelableExtra("user");
+        user = User.getUser(getApplicationContext());
 
         pictureTaken = false;
 
@@ -115,7 +116,6 @@ public class Camera extends AppCompatActivity
     private void toMap()
     {
         Intent toOptions = new Intent(Camera.this, NavActivity.class);
-        toOptions.putExtra("user", user);
         startActivity(toOptions);
     }
 
