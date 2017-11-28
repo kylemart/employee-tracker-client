@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +24,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -30,6 +32,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -46,12 +49,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 class FilteredMarkers {
     private ArrayList<Marker> filteredMarkers;
-    private int size;
+    public int size;
     private int nextIndex = 0;
 
     FilteredMarkers(ArrayList<Marker> filteredMarkers) {
@@ -95,6 +103,8 @@ class EmployeeMarker {
 public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoWindowClickListener, OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
     private GoogleMap mMap;
 
+    Context ctx;
+
     BackgroundGPS mService;
 
     // The user currently using the app
@@ -105,6 +115,8 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
 
     // The groups that the employees are part of
     private HashSet<String> groups;
+
+    private HashSet<Integer> groupIDs;
 
     // The groups shown on the map
     private HashSet<String> activeGroups = new HashSet<>();
@@ -126,8 +138,12 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        user = User.getUser(getApplicationContext());
-        //groupsStr = getIntent().getStringExtra("groups");
+        ctx = this;
+
+        //user = getIntent().getParcelableExtra("user");
+        groupIDs = (HashSet<Integer>) getIntent().getSerializableExtra("groups");
+
+        Log.d("MAP", groupIDs.toString());
 
         if (savedInstanceState != null) {
             reloaded = true;
@@ -150,13 +166,13 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        toggle.syncState();*/
 
-        createNavView();
+        //createNavView();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -175,20 +191,6 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
             finish();
         });*/
     }
-
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            BackgroundGPS.LocalBinder binder = (BackgroundGPS.LocalBinder) service;
-            mService = binder.getService();
-
-            mService.start();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-        }
-    };
 
     private void createNavView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -261,56 +263,68 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
 
     // TODO: Replace this temp method with the real one from the DatabaseIO class
     private HashSet<Employee> getEmployees() {
-        HashSet<Employee> employees = new HashSet<>(6);
+        employees.clear();
 
-        String[] names = {"Ryan Graves", "Kyle Martinez", "Michael Mosquera", "Carlos Najera",
-                "John Sermarini", "Talbot White"
-        };
+        JSONArray jsonArray = new JSONArray();
 
-        String[] emails = {"Ryan@email.com", "Kyle@email.com", "Michael@email.com", "Carlos@email.com",
-                "John@email.com", "Talbot@email.com"};
+        for(int id : groupIDs)
+            jsonArray.put(id);
 
-        String[] groups = {"Alpha,Delta,Sigma","Alpha","Sigma","Alpha,Theta","Delta","Alpha,Delta,Theta"};
+        JSONObject payload = new JSONObject();
 
-        LatLng[] coords = {new LatLng(28.604273, -81.200187), new LatLng(28.603718, -81.200488),
-                new LatLng(28.599837, -81.198138), new LatLng(28.601940, -81.200552),
-                new LatLng(28.601947, -81.198342), new LatLng(28.601447, -81.198438)
-        };
-
-        int[] pics = {R.drawable.a, R.drawable.b, R.drawable.c, R.drawable.d, R.drawable.e, R.drawable.f};
-
-        Bitmap pic;
-
-        for(int i = 0; i < names.length; i++) {
-            pic = BitmapFactory.decodeResource(this.getResources(), pics[i]);
-
-            employees.add(new Employee(names[i], emails[i], groups[i], coords[i], pic));
+        try {
+            payload.put("ids", jsonArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
+        new AsyncTask<JSONObject, Void, JSONObject>() {
+            protected JSONObject doInBackground(JSONObject[] params) {
+                return BackendServiceUtil.post("group/many", params[0], PrefUtil.getAuth(ctx));
+            }
+            protected void onPostExecute(JSONObject response) {
+                if (response.optBoolean("success")) {
+                    JSONArray jEmployees = null;
+
+                    try {
+                        jEmployees = response.getJSONArray("result");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        for (int i = 0; i < jEmployees.length(); ++i) {
+                            JSONObject employee = jEmployees.getJSONObject(i);
+                            String name = employee.getString("first_name") + " " + employee.getString("last_name");
+                            String email = employee.getString("email");
+                            LatLng coords2 = new LatLng(employee.getDouble("lat"), employee.getDouble("lng"));
+
+                            Bitmap pic = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.a);
+
+                            employees.add(new Employee(name, email, "Fred", coords2, pic));
+                        }
+
+                        Log.d("Map", employees.toString());
+
+                        populateMap(employees);
+                    } catch (JSONException e) {
+                    }
+                } else {
+                    Toast.makeText(
+                            getApplicationContext(),
+                            response.optString("message", "Bad connection :("),
+                            Toast.LENGTH_LONG
+                    ).show();
+                }
+            }
+        }.execute(payload);
 
         return employees;
     }
 
     // TODO: Remove temp data when DatabaseIO is working
     private void updateEmployees() {
-        employees = getEmployees();
-
-        Bitmap pic = BitmapFactory.decodeResource(this.getResources(), R.drawable.c);
-        employees.add(new Employee("Ryan Raves", "RyanRaves@email.com", "New Group", new LatLng(28.604279, -81.200189), pic));
-
-        groups = findGroups();
-
-        HashSet<String> newActiveGroups = new HashSet<>();
-        for(String group : activeGroups)
-            if(groups.contains(group))
-                newActiveGroups.add(group);
-        activeGroups = newActiveGroups;
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.getMenu().clear();
-
-        createNavView();
-
-        populateMap(filter(employees, activeGroups));
+        getEmployees();
     }
 
     private HashSet<String> findGroups() {
@@ -505,7 +519,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         });
 
         MenuItem next = menu.findItem(R.id.action_next);
-        next.setVisible(nextVisibility);
+        next.setVisible(nextVisibility && (groupIDs.size() > 0));
 
         if(nextVisibility)
             search.expandActionView();

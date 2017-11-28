@@ -81,13 +81,6 @@ public class User extends Admin implements Parcelable {
                 pref.getString("email", "Default@gmail.com"));
     }
 
-    public static void deleteUser(Context context)
-    {
-        SharedPreferences pref = context.getSharedPreferences("User", MODE_PRIVATE);
-
-        pref.edit().clear().commit();
-    }
-
     public static void createUser(Context context, boolean type, String firstName, String lastName, String email)
     {
         SharedPreferences pref = context.getSharedPreferences("User", MODE_PRIVATE);

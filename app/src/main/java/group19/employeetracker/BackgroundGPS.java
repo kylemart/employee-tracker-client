@@ -30,6 +30,8 @@ import java.io.IOException;
 public class BackgroundGPS extends Service {
     private static final String LOG_TAG = BackgroundGPS.class.getSimpleName();
 
+    Context ctx;
+
     private boolean running = false;
 
     private final IBinder mBinder = new LocalBinder();
