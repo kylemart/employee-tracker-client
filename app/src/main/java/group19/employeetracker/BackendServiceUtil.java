@@ -100,7 +100,7 @@ public final class BackendServiceUtil {
     private static URL createUrl(String route) {
         URL url = null;
         try {
-            url = new URL(BASE_URL + route);
+            url = new URL(BASE_URL + "/" + route);
         } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Problem building the URL", e);
         }
