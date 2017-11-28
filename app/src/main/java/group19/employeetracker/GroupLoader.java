@@ -30,7 +30,7 @@ public class GroupLoader extends AsyncTaskLoader<List<GroupListItem>> {
 
     @Override
     public List<GroupListItem> loadInBackground() {
-        String auth = PrefUtil.getAuth(getContext());
+        String auth = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lIjoxNTExODQ3MDIwLCJpZCI6MX0.z8Eqyvgtqg6OKTVp_bPr4_If4xJvClKXja1EG89fE9g"; // PrefUtil.getAuth(getContext());
         JSONObject response = BackendServiceUtil.get("user/me", auth);
         return extractGroupsFromResponse(response);
     }
