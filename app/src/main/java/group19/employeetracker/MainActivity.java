@@ -5,11 +5,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import com.google.android.gms.maps.model.LatLng;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -84,8 +87,10 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 User user = new User(false, "John Smith", "JohnSmith@average.com");
+                Employee employee = new Employee("Test Employee", "1, 2, 3", null, null);
                 Intent toProfile = new Intent(MainActivity.this, Profile.class);
                 toProfile.putExtra("user", user);
+                toProfile.putExtra("employee", employee);
                 startActivity(toProfile);
             }
         });

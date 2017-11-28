@@ -16,13 +16,12 @@ import java.util.HashSet;
 
 public class Profile extends AppCompatActivity
 {
-    private TextView fullNameView, privacyView, activeView;
+    private TextView fullNameView, privacyView;
     private ImageView profilePicView;
     private Button profileButton;
 
     private String firstName, lastName;
     private boolean publicEmployee;
-    private boolean active;
     private Bitmap profilePic;
 
     User user;
@@ -45,11 +44,6 @@ public class Profile extends AppCompatActivity
      */
     private void initData()
     {
-        /*
-        user = new User(false, "John Smith", "JohnSmith@average.com");
-        employee = new Employee(user.name, "1, 2, 3", null, null);
-        */
-
         user = getIntent().getParcelableExtra("user");
         employee = getIntent().getParcelableExtra("employee");
 
@@ -58,7 +52,6 @@ public class Profile extends AppCompatActivity
             firstName = "First";
             lastName = "Last";
             publicEmployee = true;
-            active = false;
             profilePic = null;
         }
         else
@@ -66,7 +59,6 @@ public class Profile extends AppCompatActivity
             firstName = employee.firstName;
             lastName = employee.lastName;
             publicEmployee = employee.getVisibility();
-            active = employee.active;
             profilePic = employee.pic;
         }
 
@@ -80,7 +72,6 @@ public class Profile extends AppCompatActivity
     {
         fullNameView = (TextView) findViewById(R.id.fullNameView);
         privacyView = (TextView) findViewById(R.id.privacyView);
-        activeView = (TextView) findViewById(R.id.activeView);
         profilePicView = (ImageView) findViewById(R.id.profilePicView);
         initProfileButton();
 
@@ -92,14 +83,6 @@ public class Profile extends AppCompatActivity
         else
         {
             privacyView.setText("Private");
-        }
-        if(active)
-        {
-            activeView.setText("Active");
-        }
-        else
-        {
-            activeView.setText("Inactive");
         }
         if(employee == null)
         {
@@ -143,12 +126,12 @@ public class Profile extends AppCompatActivity
                 {
                     if(!employee.getVisibility())
                     {
-                        activeView.setText("Public");
+                        privacyView.setText("Public");
                         employee.setVisibility(true);
                     }
                     else
                     {
-                        activeView.setText("Private");
+                        privacyView.setText("Private");
                         employee.setVisibility(false);
                     }
 
