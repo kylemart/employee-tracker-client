@@ -16,7 +16,7 @@ import org.json.JSONObject;
 
 public class SignUp extends AppCompatActivity
 {
-    private static final String LOG_TAG = LogIn.class.getSimpleName();
+    private static final String LOG_TAG = SignUp.class.getSimpleName();
 
     User user;
     Context ctx;
