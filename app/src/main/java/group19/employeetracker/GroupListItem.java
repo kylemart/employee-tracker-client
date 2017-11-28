@@ -7,19 +7,19 @@ import java.util.List;
  */
 public class GroupListItem {
 
-    private String id;
+    private int id;
 
     private String name;
 
-    private String size;
+    private int size;
 
-    public GroupListItem(String id, String name, String size) {
+    public GroupListItem(int id, String name, int size) {
         this.id = id;
         this.name = name;
         this.size = size;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -27,7 +27,7 @@ public class GroupListItem {
         return name;
     }
 
-    public String getSize() {
+    public int getSize() {
         return size;
     }
 }
