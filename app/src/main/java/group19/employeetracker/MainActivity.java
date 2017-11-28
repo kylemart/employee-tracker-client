@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity
     private Button debugMapButton;
     private Button debugDButton;
     private Button debugLoginButton;
+    private Button groupsButton;
 
     Intent serviceIntent;
     BackgroundGPS mService;
@@ -136,6 +137,12 @@ public class MainActivity extends AppCompatActivity
                 Intent toLogIn = new Intent(MainActivity.this, LogIn.class);
                 startActivity(toLogIn);
             }
+        });
+
+        groupsButton = (Button) findViewById(R.id.groupsButton);
+        groupsButton.setOnClickListener((view) -> {
+            Intent toGroups = new Intent(MainActivity.this, GroupActivity.class);
+            startActivity(toGroups);
         });
     }
 }
