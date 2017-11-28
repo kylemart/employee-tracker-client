@@ -5,5 +5,5 @@
         android:endColor="?attr/colorPrimary"
         android:type="linear"
         android:angle="135"/>-->
-    <solid android:color="@color/colorPrimary" />
+    <solid android:color="@color/colorPrimaryDark" />
 </shape>

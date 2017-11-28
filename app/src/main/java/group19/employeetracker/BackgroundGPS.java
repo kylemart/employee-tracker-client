@@ -76,7 +76,7 @@ public class BackgroundGPS extends Service {
 
             // This creates a service that stays alive even after the app is closed
 
-            Intent notificationIntent = new Intent(this, MainActivity.class);
+            Intent notificationIntent = new Intent(this, Main2Activity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
             Notification notification = new Notification.Builder(this)

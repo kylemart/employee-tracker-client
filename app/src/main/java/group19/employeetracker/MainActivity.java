@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 User user = new User(false, "John Smith", "JohnSmith@average.com");
-                Intent toMap = new Intent(MainActivity.this, MapsActivity.class);
+                Intent toMap = new Intent(MainActivity.this, Main2Activity.class);
                 toMap.putExtra("user", user);
                 startActivity(toMap);
             }
