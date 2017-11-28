@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="group19.employeetracker.Main2Activity">
+    tools:context="group19.employeetracker.NavActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

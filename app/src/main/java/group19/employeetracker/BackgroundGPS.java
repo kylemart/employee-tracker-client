@@ -19,6 +19,11 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
 public class BackgroundGPS extends Service {
     private boolean running = false;
 
@@ -41,6 +46,20 @@ public class BackgroundGPS extends Service {
 
     private void sendLocation(double lat, double lng) {
         currentLoc = new LatLng(lat, lng);
+
+        /*JSONObject json = new JSONObject();
+        try {
+            json.put("lat", lat);
+            json.put("lng", lng);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            BackendServiceUtil.post("location/report", json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
 
         Log.d("BACKGROUNDGPS", lat + ", " + lng);
     }
@@ -76,7 +95,7 @@ public class BackgroundGPS extends Service {
 
             // This creates a service that stays alive even after the app is closed
 
-            Intent notificationIntent = new Intent(this, Main2Activity.class);
+            Intent notificationIntent = new Intent(this, NavActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
             Notification notification = new Notification.Builder(this)

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="group19.employeetracker.Main2Activity"
+    tools:context="group19.employeetracker.NavActivity"
     tools:showIn="@layout/app_bar_main2">
 
 </android.support.constraint.ConstraintLayout>
