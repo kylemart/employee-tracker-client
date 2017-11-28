@@ -2,6 +2,8 @@ package group19.employeetracker;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -124,14 +126,14 @@ public class Camera extends AppCompatActivity
         {
             return;
         }
-
         Bitmap bitmap = (Bitmap) data.getExtras().get("data");
 
         if(bitmap != null)
         {
+            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             pictureView.setImageBitmap(bitmap);
-        }
 
-        pictureTaken = true;
+            pictureTaken = true;
+        }
     }
 }

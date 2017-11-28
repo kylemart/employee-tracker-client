@@ -12,9 +12,10 @@ import java.util.HashSet;
 //TODO: If you change anything in here make sure to generate parcelable
 // The plugin for this can be found here: https://github.com/mcharmas/android-parcelable-intellij-plugin
 
-public class Employee implements Parcelable {
+public class Employee implements Parcelable
+{
     // The first and last name of the employee
-    public String fullName, firstName, lastName;
+    public String fullName, firstName, lastName, email;
 
     // Denoting the group(s) the employee is in
     public HashSet<String> group;
@@ -28,7 +29,7 @@ public class Employee implements Parcelable {
     // If the employee is public
     private boolean visible;
 
-    Employee(String fullName, String group, LatLng coords, Bitmap pic) {
+    Employee(String fullName, String email, String group, LatLng coords, Bitmap pic) {
         this.fullName = fullName;
 
         String[] names = fullName.split(" ", 2);
@@ -37,6 +38,7 @@ public class Employee implements Parcelable {
         if(names.length > 1)
             this.lastName = names[1];
 
+        this.email = email;
         this.group = new HashSet<>(Arrays.asList(group.split(",")));
         this.coords = coords;
         this.pic = pic;
@@ -60,6 +62,7 @@ public class Employee implements Parcelable {
         dest.writeString(this.fullName);
         dest.writeString(this.firstName);
         dest.writeString(this.lastName);
+        dest.writeString(this.email);
         dest.writeSerializable(this.group);
         dest.writeParcelable(this.coords, flags);
         dest.writeParcelable(this.pic, flags);
@@ -70,6 +73,7 @@ public class Employee implements Parcelable {
         this.fullName = in.readString();
         this.firstName = in.readString();
         this.lastName = in.readString();
+        this.email = in.readString();
         this.group = (HashSet<String>) in.readSerializable();
         this.coords = in.readParcelable(LatLng.class.getClassLoader());
         this.pic = in.readParcelable(Bitmap.class.getClassLoader());

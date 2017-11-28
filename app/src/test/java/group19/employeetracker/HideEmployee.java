@@ -9,7 +9,7 @@ public class HideEmployee {
     public void hide() throws Exception {
         User user = new User(true, "User Name", "user@domain.com");
 
-        Employee employee = new Employee("Fred Flintstone", "Alpha", new LatLng(28.604273, -81.200187), null);
+        Employee employee = new Employee("Fred Flintstone", "Fred@email.com", "Alpha", new LatLng(28.604273, -81.200187), null);
 
         user.hideEmployee(employee);
 

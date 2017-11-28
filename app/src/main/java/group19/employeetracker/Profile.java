@@ -16,11 +16,11 @@ import java.util.HashSet;
 
 public class Profile extends AppCompatActivity
 {
-    private TextView fullNameView, privacyView;
+    private TextView fullNameView, privacyView, emailView;
     private ImageView profilePicView;
     private Button profileButton;
 
-    private String firstName, lastName;
+    private String firstName, lastName, email;
     private boolean publicEmployee;
     private Bitmap profilePic;
 
@@ -51,6 +51,7 @@ public class Profile extends AppCompatActivity
         {
             firstName = "First";
             lastName = "Last";
+            email = "FirstLast@email.com";
             publicEmployee = true;
             profilePic = null;
         }
@@ -58,6 +59,7 @@ public class Profile extends AppCompatActivity
         {
             firstName = employee.firstName;
             lastName = employee.lastName;
+            email = employee.email;
             publicEmployee = employee.getVisibility();
             profilePic = employee.pic;
         }
@@ -72,10 +74,12 @@ public class Profile extends AppCompatActivity
     {
         fullNameView = (TextView) findViewById(R.id.fullNameView);
         privacyView = (TextView) findViewById(R.id.privacyView);
+        emailView = (TextView) findViewById(R.id.emailView);
         profilePicView = (ImageView) findViewById(R.id.profilePicView);
         initProfileButton();
 
         fullNameView.setText(firstName + " " + lastName);
+        emailView.setText(email);
         if(publicEmployee)
         {
             privacyView.setText("Public");
@@ -154,7 +158,9 @@ public class Profile extends AppCompatActivity
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        /*
         profilePic = (Bitmap) data.getExtras().get("data");
+
 
         if(profilePic != null)
         {
@@ -162,5 +168,20 @@ public class Profile extends AppCompatActivity
         }
 
         setEmployeePic(profilePic);
+        */
+
+        if(data.getExtras().get("data") == null)
+        {
+            return;
+        }
+        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+
+        if(bitmap != null)
+        {
+            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+            profilePicView.setImageBitmap(bitmap);
+
+            setEmployeePic(bitmap);
+        }
     }
 }

@@ -262,9 +262,12 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
     private HashSet<Employee> getEmployees() {
         HashSet<Employee> employees = new HashSet<>(6);
 
-        String[] names = {"Ryan Graves", "Kyle Martinez", "David Mosquera", "Carlos Najera",
+        String[] names = {"Ryan Graves", "Kyle Martinez", "Michael Mosquera", "Carlos Najera",
                 "John Sermarini", "Talbot White"
         };
+
+        String[] emails = {"Ryan@email.com", "Kyle@email.com", "Michael@email.com", "Carlos@email.com",
+                "John@email.com", "Talbot@email.com"};
 
         String[] groups = {"Alpha,Delta,Sigma","Alpha","Sigma","Alpha,Theta","Delta","Alpha,Delta,Theta"};
 
@@ -280,7 +283,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         for(int i = 0; i < names.length; i++) {
             pic = BitmapFactory.decodeResource(this.getResources(), pics[i]);
 
-            employees.add(new Employee(names[i], groups[i], coords[i], pic));
+            employees.add(new Employee(names[i], emails[i], groups[i], coords[i], pic));
         }
 
         return employees;
@@ -291,7 +294,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         employees = getEmployees();
 
         Bitmap pic = BitmapFactory.decodeResource(this.getResources(), R.drawable.c);
-        employees.add(new Employee("Ryan Raves", "New Group", new LatLng(28.604279, -81.200189), pic));
+        employees.add(new Employee("Ryan Raves", "RyanRaves@email.com", "New Group", new LatLng(28.604279, -81.200189), pic));
 
         groups = findGroups();
 

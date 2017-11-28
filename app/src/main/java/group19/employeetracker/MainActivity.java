@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 User user = new User(false, "John Smith", "JohnSmith@average.com");
-                Employee employee = new Employee("Test Employee", "1, 2, 3", null, null);
+                Employee employee = new Employee("Test Employee", "TestEmployee@email.com", "1, 2, 3", null, null);
                 Intent toProfile = new Intent(MainActivity.this, Profile.class);
                 toProfile.putExtra("user", user);
                 toProfile.putExtra("employee", employee);

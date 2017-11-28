@@ -60,6 +60,9 @@ public class SearchTest {
         String[] names = {"Fred Flintstone", "Wilma Flintstone", "Pebbles Flintstone",
                 "Barney Rubble", "Betty Rubble", "Bamm-Bamm Rubble"};
 
+        String[] emails = {"Fred@email.com", "Wilma@email.com", "Pebbles@email.com",
+                "Barney@email.com", "Betty@email.com", "Bamm-Bamm@email.com"};
+
         String[] groups = {"Alpha,Delta,Sigma","Alpha","Sigma","Alpha,Theta","Delta","Alpha,Delta,Theta"};
 
         LatLng[] coords = {new LatLng(28.604273, -81.200187), new LatLng(28.603718, -81.200488),
@@ -68,7 +71,7 @@ public class SearchTest {
         };
 
         for(int i = 0; i < names.length; i++) {
-            employees.add(new Employee(names[i], groups[i], coords[i], null));
+            employees.add(new Employee(names[i], emails[i], groups[i], coords[i], null));
         }
 
         return employees;
