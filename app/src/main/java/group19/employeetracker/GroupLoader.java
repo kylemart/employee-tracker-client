@@ -45,9 +45,9 @@ public class GroupLoader extends AsyncTaskLoader<List<GroupListItem>> {
 
             for (int i = 0; i < groupArray.length(); ++i) {
                 JSONObject group = groupArray.getJSONObject(i);
-                String id = group.getString("id");
+                int id = group.getInt("id");
                 String name = group.getString("name");
-                String size = group.getString("size");
+                int size = group.getInt("size");
 
                 groupListItems.add(new GroupListItem(id, name, size));
             }
