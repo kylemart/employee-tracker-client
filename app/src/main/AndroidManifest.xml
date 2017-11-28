@@ -48,6 +48,7 @@
 
         <activity android:name=".DatabaseIOTest" />
         <activity android:name=".LogIn" />
+        <activity android:name=".GroupActivity" />
         <activity android:name=".SignUp" />
         <activity
             android:name=".NavActivity"
