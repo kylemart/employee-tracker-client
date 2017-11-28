@@ -34,15 +34,6 @@ public class SignUp extends AppCompatActivity
         final EditText etpass2 = (EditText)findViewById(R.id.etpass2);
         final Button bcreateaccount = (Button) findViewById(R.id.bcreateaccount);
 
-        // DEBUG
-        etfirstName.setText("John");
-        etlastName.setText("Doe");
-        etemail.setText("test123@example.com");
-        etpass1.setText("hunter2");
-        etpass2.setText("hunter2");
-        // DEBUG
-
-
         bcreateaccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

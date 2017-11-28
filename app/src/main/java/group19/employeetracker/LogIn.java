@@ -41,11 +41,6 @@ public class LogIn extends AppCompatActivity
         final EditText etemail = (EditText)findViewById(R.id.etEmail);
         final EditText etpassword = (EditText)findViewById(R.id.etpassword);
 
-        // DEBUG
-        etemail.setText("test123@example.com");
-        etpassword.setText("hunter2");
-        // DEBUG
-
         final Button blogin = (Button) findViewById(R.id.blogin);
         final TextView signup = (TextView) findViewById(R.id.signup);
 
