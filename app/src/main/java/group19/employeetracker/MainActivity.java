@@ -103,8 +103,8 @@ public class MainActivity extends AppCompatActivity
             {
                 SharedPreferences pref = getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
                 SharedPreferences.Editor editor = pref.edit();
-                editor.putBoolean("type", true);
-                editor.putString("email", "JohnSmith@hotmail.com");
+                editor.putBoolean("type", false);
+                editor.putString("email", "TestEmployee@email.com");
                 editor.putString("name", "John Smith");
                 editor.commit();
 
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity
             {
                 SharedPreferences pref = getApplicationContext().getSharedPreferences("User", MODE_PRIVATE);
                 SharedPreferences.Editor editor = pref.edit();
-                editor.putBoolean("type", true);
+                editor.putBoolean("type", false);
                 editor.putString("email", "JohnSmith@hotmail.com");
                 editor.putString("name", "John Smith");
                 editor.commit();
