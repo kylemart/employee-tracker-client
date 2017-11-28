@@ -54,6 +54,7 @@
         <activity android:name=".LogIn"
             android:screenOrientation="portrait"/>
         <activity android:name=".GroupActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
         <activity android:name=".SignUp"
             android:screenOrientation="portrait"/>

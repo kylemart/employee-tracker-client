@@ -55,14 +55,6 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        /*Intent intent = new Intent(this, BackgroundGPS.class);
-        startService(intent);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);*/
-
-        /*Intent intent = new Intent(getApplicationContext(), GroupActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(intent);*/
-
         View navHeader = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
 
         if(user != null)
@@ -70,10 +62,14 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
         ((TextView) navHeader.findViewById(R.id.name)).setText("Hello World");
         ((TextView) navHeader.findViewById(R.id.email)).setText("Hello@World.com");
 
+        Intent intent = new Intent(this, BackgroundGPS.class);
+        startService(intent);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
         Button logout = (Button) navHeader.findViewById(R.id.logout);
 
         logout.setOnClickListener(v -> {
-            //stopService(intent);
+            stopService(intent);
 
             PrefUtil.deleteUser(ctx);
 

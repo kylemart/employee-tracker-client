@@ -36,19 +36,19 @@ public class MainActivity extends AppCompatActivity
 
         debugInit();
 
-        serviceIntent = new Intent(this, BackgroundGPS.class);
+        /*serviceIntent = new Intent(this, BackgroundGPS.class);
         startService(serviceIntent);
-        bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
+        bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);*/
     }
 
-    protected void onDestroy() {
+    /*protected void onDestroy() {
         super.onDestroy();
 
         if(!mService.isRunning())
             stopService(serviceIntent);
-    }
+    }*/
 
-    private ServiceConnection mConnection = new ServiceConnection() {
+    /*private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             BackgroundGPS.LocalBinder binder = (BackgroundGPS.LocalBinder) service;
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
         }
-    };
+    };*/
 
     /**
      * Initializes the buttons and intents necessary for testing and debugging.

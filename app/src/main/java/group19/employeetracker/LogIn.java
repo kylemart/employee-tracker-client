@@ -116,7 +116,7 @@ public class LogIn extends AppCompatActivity
         super.onDestroy();
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
+    /*private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             BackgroundGPS.LocalBinder binder = (BackgroundGPS.LocalBinder) service;
@@ -134,5 +134,5 @@ public class LogIn extends AppCompatActivity
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
         }
-    };
+    };*/
 }
