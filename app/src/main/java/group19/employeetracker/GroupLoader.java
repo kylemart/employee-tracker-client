@@ -30,16 +30,16 @@ public class GroupLoader extends AsyncTaskLoader<List<GroupListItem>> {
 
     @Override
     public List<GroupListItem> loadInBackground() {
-        //String auth = PrefUtil.getAuth(getContext());
-        //JSONObject response = BackendServiceUtil.get("user/me", auth);
-        //return extractGroupsFromResponse(response);
+        String auth = PrefUtil.getAuth(getContext());
+        JSONObject response = BackendServiceUtil.get("user/me", auth);
+        return extractGroupsFromResponse(response);
 
-        List<GroupListItem> groups = new ArrayList<>();
+        /*List<GroupListItem> groups = new ArrayList<>();
 
         groups.add(new GroupListItem(1, "Minutemen", 1));
         groups.add(new GroupListItem(2,"Energy Drinkers", 2));
 
-        return groups;
+        return groups;*/
     }
 
     private static List<GroupListItem> extractGroupsFromResponse(JSONObject response) {

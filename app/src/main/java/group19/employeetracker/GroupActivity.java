@@ -1,21 +1,29 @@
 package group19.employeetracker;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.app.LoaderManager;
 import android.content.Loader;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
-public class GroupActivity extends AppCompatActivity
+public class GroupActivity extends NavActivity
         implements LoaderManager.LoaderCallbacks<List<GroupListItem>> {
 
     private static final String LOG_TAG = GroupActivity.class.getName();
@@ -32,10 +40,14 @@ public class GroupActivity extends AppCompatActivity
     /** TextView that is displayed when the list is empty. */
     private TextView emptyStateTextView;
 
+    private HashSet<Integer> groups = new HashSet<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_groups);
+        //setContentView(R.layout.activity_groups);
+        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
+        getLayoutInflater().inflate(R.layout.activity_groups, contentFrameLayout);
 
         ListView groupListView = (ListView) findViewById(R.id.groups_list);
 
@@ -48,11 +60,20 @@ public class GroupActivity extends AppCompatActivity
         groupListView.setOnItemClickListener((adapterView, view, position, l) -> {
             GroupListItem clickedGroupListItem = adapter.getItem(position);
 
-            Log.d(LOG_TAG, "Will eventually launch new activity!");
-
             int groupId = clickedGroupListItem.getId();
 
-            //int groupId = clickedGroupListItem.getId();
+            String strColor = String.format("#%06X", 0xFFFFFF & ((ColorDrawable)view.getBackground()).getColor());
+
+            if(strColor.equals("#8585D0")) {
+                view.setBackgroundColor(Color.parseColor("#FFFFFF"));
+
+                groups.remove(groupId);
+
+            } else {
+                view.setBackgroundColor(Color.parseColor("#8585D0"));
+
+                groups.add(groupId);
+            }
 
             // Create intent and switch to map activity
         });
@@ -70,6 +91,18 @@ public class GroupActivity extends AppCompatActivity
             loadingIndicator.setVisibility(View.GONE);
             emptyStateTextView.setText("No internet connection.");
         }
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(view -> sendToMap());
+    }
+
+    private void sendToMap() {
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.putExtra("groups", groups);
+
+        startActivity(intent);
+
+        groups.clear();
     }
 
     @Override
