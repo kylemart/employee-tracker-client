@@ -111,7 +111,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
     private User user;
 
     // The employees visible to the user
-    private HashSet<Employee> employees;
+    private HashSet<Employee> employees = new HashSet<>();
 
     // The groups that the employees are part of
     private HashSet<String> groups;
@@ -299,7 +299,12 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
                             String email = employee.getString("email");
                             LatLng coords2 = new LatLng(employee.getDouble("lat"), employee.getDouble("lng"));
 
-                            Bitmap pic = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.a);
+                            String imgData = employee.getString("profile_img");
+                            if (imgData.length() == 0) {
+                                imgData = Employee.encodePic(BitmapFactory.decodeResource(ctx.getResources(), R.drawable.a));
+                            }
+
+                            Bitmap pic = Employee.decodePic(imgData);
 
                             employees.add(new Employee(name, email, "Fred", coords2, pic));
                         }
@@ -357,6 +362,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         Marker marker;
 
         for(Employee employee : employees) {
+
             Bitmap pic = Bitmap.createScaledBitmap(employee.pic, 150, 150, false);
 
             marker = mMap.addMarker(new MarkerOptions().position(employee.coords)

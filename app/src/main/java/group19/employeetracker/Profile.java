@@ -1,11 +1,14 @@
 package group19.employeetracker;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,10 +17,15 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashSet;
 
 public class Profile extends AppCompatActivity
 {
+    private static final String LOG_TAG = Profile.class.getSimpleName();
+
     private TextView fullNameView, privacyView, emailView;
     private ImageView profilePicView;
     private Button profileButton;
@@ -27,12 +35,14 @@ public class Profile extends AppCompatActivity
     private Bitmap profilePic;
 
     User user;
+    Context ctx;
     Employee employee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        ctx = this;
         setContentView(R.layout.activity_profile);
 
         initData();
@@ -155,17 +165,6 @@ public class Profile extends AppCompatActivity
         });
     }
 
-    /**
-     * Updates the employees picture server side.
-     * @param newPic the picture to send back
-     */
-    private void setEmployeePic(Bitmap newPic)
-    {
-        employee.pic = newPic;
-
-        // TODO: Update employee picture on database
-    }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if(data.getExtras().get("data") == null)
@@ -177,9 +176,34 @@ public class Profile extends AppCompatActivity
         if(bitmap != null)
         {
             bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+
+            JSONObject payload = new JSONObject();
+            try {
+                payload.put("data", Employee.encodePic(bitmap));
+            } catch (JSONException e) {
+                Log.d(LOG_TAG, "JSONException", e);
+            }
+
+            new AsyncTask<JSONObject, Void, JSONObject>() {
+                protected JSONObject doInBackground(JSONObject[] params) {
+                    return BackendServiceUtil.post("user/update/profile", params[0], PrefUtil.getAuth(ctx));
+                }
+                protected void onPostExecute(JSONObject response) {
+                    if (response.optBoolean("success")) {
+
+                    } else {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                response.optString("message", "Could not connect :("),
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+                }
+            }.execute(payload);
+
             profilePicView.setImageBitmap(bitmap);
 
-            setEmployeePic(bitmap);
+            employee.pic = bitmap;
         }
     }
 }
