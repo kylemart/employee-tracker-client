@@ -127,6 +127,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         setContentView(R.layout.activity_map);
 
         user = getIntent().getParcelableExtra("user");
+        //groupsStr = getIntent().getStringExtra("groups");
 
         if (savedInstanceState != null) {
             reloaded = true;
@@ -143,8 +144,8 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
             if(!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION))
                 ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 34);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(view -> updateEmployees());
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(view -> updateEmployees());*/
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -161,7 +162,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Intent intent = new Intent(this, BackgroundGPS.class);
+        /*Intent intent = new Intent(this, BackgroundGPS.class);
         startService(intent);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
@@ -172,7 +173,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
             stopService(intent);
 
             finish();
-        });
+        });*/
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -517,9 +518,10 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings)
-            return true;
-        else if(id == R.id.action_search) {
+        if (id == R.id.employeeList) {
+            /*Intent intent = new Intent(getApplicationContext(), employeeList.class);
+            startActivity(intent);*/
+        } else if(id == R.id.action_search) {
             nextVisibility = !nextVisibility;
             invalidateOptionsMenu();
         } else if(id == R.id.action_next)
