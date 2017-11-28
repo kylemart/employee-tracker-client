@@ -114,7 +114,6 @@ public class Employee implements Parcelable
         }
         catch (Exception e)
         {
-            e.getMessage();
             return null;
         }
     }

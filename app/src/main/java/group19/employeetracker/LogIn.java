@@ -116,14 +116,14 @@ public class LogIn extends AppCompatActivity
         super.onDestroy();
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
+    /*private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             BackgroundGPS.LocalBinder binder = (BackgroundGPS.LocalBinder) service;
             mService = binder.getService();
 
             if(mService.isRunning()) {
-                User.createUser(getApplicationContext(),user.isAdmin, user.firstName, user.lastName, user.email);
+                User.createUser(getApplicationContext(), user.isAdmin, user.firstName, user.lastName, user.email);
                 Intent intent = new Intent(LogIn.this, NavActivity.class);
                 startActivity(intent);
             }
@@ -134,5 +134,5 @@ public class LogIn extends AppCompatActivity
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
         }
-    };
+    };*/
 }
