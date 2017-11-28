@@ -76,7 +76,9 @@ public class MainActivity extends AppCompatActivity
         {
             public void onClick(View v)
             {
+                User user = new User(false, "John Smith", "JohnSmith@average.com");
                 Intent toCamera = new Intent(MainActivity.this, Camera.class);
+                toCamera.putExtra("user", user);
                 startActivity(toCamera);
             }
         });

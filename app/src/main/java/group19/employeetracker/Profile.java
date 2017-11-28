@@ -149,7 +149,7 @@ public class Profile extends AppCompatActivity
                         employee.setVisibility(false);
                     }
 
-                    //TODO: Send active status to database
+                    //TODO: Send visibility status to database
                 }
             }
         });
@@ -168,18 +168,6 @@ public class Profile extends AppCompatActivity
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        /*
-        profilePic = (Bitmap) data.getExtras().get("data");
-
-
-        if(profilePic != null)
-        {
-            profilePicView.setImageBitmap(profilePic);
-        }
-
-        setEmployeePic(profilePic);
-        */
-
         if(data.getExtras().get("data") == null)
         {
             return;
