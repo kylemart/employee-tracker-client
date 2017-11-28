@@ -88,7 +88,7 @@ public class User extends Admin implements Parcelable {
     public static void createUser(Context context, boolean type, String firstName, String lastName, String email)
     {
         SharedPreferences pref = context.getSharedPreferences("User", MODE_PRIVATE);
-        
+
         pref.edit().putBoolean("type", type).apply();
         pref.edit().putString("email", email).apply();
         pref.edit().putString("firstName", firstName).apply();
