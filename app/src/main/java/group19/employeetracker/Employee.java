@@ -1,11 +1,15 @@
 package group19.employeetracker;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Base64;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -91,4 +95,27 @@ public class Employee implements Parcelable
             return new Employee[size];
         }
     };
+
+    public static String encodePic(Bitmap p)
+    {
+        ByteArrayOutputStream bs = new ByteArrayOutputStream();
+        p.compress(Bitmap.CompressFormat.PNG,100, bs);
+        byte [] b = bs.toByteArray();
+        return Base64.encodeToString(b, Base64.DEFAULT);
+    }
+
+    public static Bitmap decodePic(String s)
+    {
+        try
+        {
+            byte[] eb = Base64.decode(s, Base64.DEFAULT);
+            Bitmap b = BitmapFactory.decodeByteArray(eb, 0, eb.length);
+            return b;
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+            return null;
+        }
+    }
 }

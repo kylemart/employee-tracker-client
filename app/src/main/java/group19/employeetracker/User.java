@@ -3,8 +3,11 @@ package group19.employeetracker;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.io.ByteArrayOutputStream;
 
 import static android.content.Context.MODE_PRIVATE;
 
