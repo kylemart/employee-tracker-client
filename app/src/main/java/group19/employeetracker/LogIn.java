@@ -123,7 +123,7 @@ public class LogIn extends AppCompatActivity
             mService = binder.getService();
 
             if(mService.isRunning()) {
-                User.createUser(getApplicationContext(),user.isAdmin, user.firstName, user.lastName, user.email);
+                User.createUser(getApplicationContext(), user.isAdmin, user.firstName, user.lastName, user.email);
                 Intent intent = new Intent(LogIn.this, NavActivity.class);
                 startActivity(intent);
             }

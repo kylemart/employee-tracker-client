@@ -77,9 +77,9 @@ public class BackgroundGPS extends Service {
                 if (response.optBoolean("success")) {
                 } else {
                     Toast.makeText(
-                            getApplicationContext(),
-                            response.optString("message", "Could not send location! :("),
-                            Toast.LENGTH_LONG
+                        getApplicationContext(),
+                        response.optString("message", "Could not send location! :("),
+                        Toast.LENGTH_LONG
                     ).show();
                 }
             }
