@@ -166,17 +166,6 @@ public class Profile extends AppCompatActivity
         });
     }
 
-    /**
-     * Updates the employees picture server side.
-     * @param newPic the picture to send back
-     */
-    private void setEmployeePic(Bitmap newPic)
-    {
-        employee.pic = newPic;
-
-        // TODO: Update employee picture on database
-    }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if(data.getExtras().get("data") == null)
@@ -215,7 +204,7 @@ public class Profile extends AppCompatActivity
 
             profilePicView.setImageBitmap(bitmap);
 
-            setEmployeePic(bitmap);
+            employee.pic = bitmap;
         }
     }
 }
