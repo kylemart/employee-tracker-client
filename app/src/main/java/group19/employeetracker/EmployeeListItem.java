@@ -10,9 +10,12 @@ public class EmployeeListItem {
 
     private String lastName;
 
+    private boolean highlighted;
+
     public EmployeeListItem(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+        highlighted = false;
     }
 
     public String getFirstName() {
@@ -25,5 +28,13 @@ public class EmployeeListItem {
 
     public String getFullName() {
         return firstName + " " + lastName;
+    }
+
+    public void highlight(boolean val) {
+        highlighted = val;
+    }
+
+    public boolean isHighlighted() {
+        return highlighted;
     }
 }

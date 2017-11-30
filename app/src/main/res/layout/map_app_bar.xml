@@ -18,27 +18,9 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             android:weightSum="1"
-            app:contentInsetStartWithNavigation="0dp">
-
-            <!--<SearchView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:iconifiedByDefault="false"
-                android:searchIcon="@null"
-                android:queryHint="Find an Employee" />-->
-
-        </android.support.v7.widget.Toolbar>
-
+            app:contentInsetStartWithNavigation="0dp" />
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/map_content" />
-
-    <!--<android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_refresh_white_48dp" />-->
 
 </android.support.design.widget.CoordinatorLayout>

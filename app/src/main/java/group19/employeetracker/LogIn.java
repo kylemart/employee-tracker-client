@@ -25,9 +25,6 @@ public class LogIn extends AppCompatActivity
     User user;
     Context ctx;
 
-    Intent serviceIntent;
-    BackgroundGPS mService;
-
     @Override
     //XML is loaded into a View resource
     //Loading the layout resource
@@ -37,7 +34,11 @@ public class LogIn extends AppCompatActivity
         ctx = this;
         setContentView(R.layout.activity_log_in);
 
-        //Created instanceo of view object and captured in layout
+        // Persistent login
+        if(!PrefUtil.getAuth(ctx).isEmpty())
+            startActivity(new Intent(LogIn.this, GroupActivity.class));
+
+        //Created instance of view object and captured in layout
         final EditText etemail = (EditText)findViewById(R.id.etEmail);
         final EditText etpassword = (EditText)findViewById(R.id.etpassword);
 
@@ -90,7 +91,7 @@ public class LogIn extends AppCompatActivity
                                 if (user.isAdmin) {
                                     User.createUser(getApplicationContext(),user.isAdmin, user.firstName, user.lastName, user.email);
                                     LogIn.this.startActivity(
-                                        new Intent(LogIn.this, NavActivity.class)
+                                        new Intent(LogIn.this, GroupActivity.class)
                                     );
                                 } else {
                                     User.createUser(getApplicationContext(),user.isAdmin, user.firstName, user.lastName, user.email);
@@ -111,28 +112,4 @@ public class LogIn extends AppCompatActivity
             }
         });
     }
-
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    /*private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            BackgroundGPS.LocalBinder binder = (BackgroundGPS.LocalBinder) service;
-            mService = binder.getService();
-
-            if(mService.isRunning()) {
-                User.createUser(getApplicationContext(), user.isAdmin, user.firstName, user.lastName, user.email);
-                Intent intent = new Intent(LogIn.this, NavActivity.class);
-                startActivity(intent);
-            }
-
-            unbindService(mConnection);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-        }
-    };*/
 }

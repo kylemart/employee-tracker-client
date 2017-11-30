@@ -2,7 +2,11 @@ package group19.employeetracker;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,7 +20,6 @@ import java.util.List;
  */
 
 public class EmployeeLoader extends AsyncTaskLoader<List<EmployeeListItem>> {
-
     private static final String LOG_TAG = GroupLoader.class.getName();
 
     public EmployeeLoader(Context context) {
@@ -63,6 +66,7 @@ public class EmployeeLoader extends AsyncTaskLoader<List<EmployeeListItem>> {
                 JSONObject employee = employeeArray.getJSONObject(i);
                 String firstName = employee.getString("first_name");
                 String lastName = employee.getString("last_name");
+
                 employeeListItems.add(new EmployeeListItem(firstName, lastName));
             }
         } catch (JSONException e) {

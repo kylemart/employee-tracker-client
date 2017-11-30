@@ -21,7 +21,7 @@
         android:layout_alignParentTop="true"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:paddingRight="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@drawable/f" />
+        app:srcCompat="@drawable/default_profile" />
 
     <TextView
         android:id="@+id/name"

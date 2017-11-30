@@ -30,23 +30,54 @@ import java.io.IOException;
 public class BackgroundGPS extends Service {
     private static final String LOG_TAG = BackgroundGPS.class.getSimpleName();
 
-    Context ctx;
-
-    private boolean running = false;
-
-    private final IBinder mBinder = new LocalBinder();
+   private final IBinder mBinder = null;
 
     private final long ONE_SECOND = 1000;
     private final long TEN_SECONDS = ONE_SECOND*10;
 
-
     FusedLocationProviderClient mFusedLocationClient;
     LocationCallback mLocationCallback;
 
-    LatLng currentLoc =  new LatLng(0, 0);
+    Context ctx;
+
+    @Override
+    public void onCreate() {
+        ctx = this;
+
+        // This creates a service that stays alive even after the app is closed
+
+        Intent notificationIntent = new Intent(this, GroupActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+        Notification notification = new Notification.Builder(this)
+                .setContentTitle("Tracking Location")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(pendingIntent)
+                .build();
+
+        startForeground(1, notification);
+
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                Location location = locationResult.getLastLocation();
+
+                sendLocation(location.getLatitude(), location.getLongitude());
+            }
+        };
+    }
 
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(TEN_SECONDS);
+        mLocationRequest.setMaxWaitTime(TEN_SECONDS);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+
         return START_STICKY;
     }
 
@@ -54,8 +85,6 @@ public class BackgroundGPS extends Service {
     // This way the background service doesn't have to worry about who is logged in
 
     private void sendLocation(double lat, double lng) {
-        currentLoc = new LatLng(lat, lng);
-
         Log.d("BACKGROUNDGPS", lat + ", " + lng);
 
         JSONObject payload = new JSONObject();
@@ -86,65 +115,14 @@ public class BackgroundGPS extends Service {
         }.execute(payload);
     }
 
-    public LatLng getLocation() {
-        return currentLoc;
-    }
-
     @Override
     public void onDestroy() {
-        if(isRunning())
-            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+        PrefUtil.deleteUser(ctx);
     }
 
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
-    }
-
-    public class LocalBinder extends Binder {
-        public BackgroundGPS getService() {
-            return BackgroundGPS.this;
-        }
-    }
-
-    public boolean isRunning() {
-        return running;
-    }
-
-    public void start() {
-        if(!running) {
-            running = true;
-
-            // This creates a service that stays alive even after the app is closed
-
-            Intent notificationIntent = new Intent(this, GroupActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-
-            Notification notification = new Notification.Builder(this)
-                    .setContentTitle("Tracking Location")
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentIntent(pendingIntent)
-                    .build();
-
-            startForeground(1, notification);
-
-            mLocationCallback = new LocationCallback() {
-                @Override
-                public void onLocationResult(LocationResult locationResult) {
-                    Location location = locationResult.getLastLocation();
-
-                    sendLocation(location.getLatitude(), location.getLongitude());
-                }
-            };
-        }
-
-        LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(TEN_SECONDS);
-        mLocationRequest.setMaxWaitTime(TEN_SECONDS);
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
     }
 }

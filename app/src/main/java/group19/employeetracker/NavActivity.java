@@ -1,11 +1,8 @@
 package group19.employeetracker;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,20 +16,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 public class NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
     User user;
-
-    BackgroundGPS mService;
-
     Context ctx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_nav);
 
         ctx = this;
 
@@ -59,10 +50,8 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
 
         Intent intent = new Intent(this, BackgroundGPS.class);
         startService(intent);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         Button logout = (Button) navHeader.findViewById(R.id.logout);
-
         logout.setOnClickListener(v -> {
             stopService(intent);
 
@@ -77,34 +66,22 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
         });
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            BackgroundGPS.LocalBinder binder = (BackgroundGPS.LocalBinder) service;
-            mService = binder.getService();
-
-            mService.start();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-        }
-    };
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main2, menu);
+        getMenuInflater().inflate(R.menu.main_nav, menu);
+
+        MenuItem search = menu.findItem(R.id.action_search);
+        search.setVisible(false);
+
         return true;
     }
 
@@ -114,11 +91,6 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
-            return true;
-        }*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -134,10 +106,14 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
             Intent intent = new Intent(getApplicationContext(), EmployeeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+            overridePendingTransition(0,0);
+            item.setChecked(false);
         } else if (id == R.id.groupList) {
             Intent intent = new Intent(getApplicationContext(), GroupActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+            overridePendingTransition(0,0);
+            item.setChecked(false);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

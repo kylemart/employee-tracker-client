@@ -29,22 +29,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".MainActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".Camera"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"/>
-        <activity android:name=".Profile" />
-
-        <service
-            android:name=".BackgroundGPS"
-            android:exported="false" />
-
-        <activity android:name=".DatabaseIOTest"
-            android:screenOrientation="portrait"/>
         <activity android:name=".LogIn"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -53,12 +37,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GroupActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".SignUp"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".EmployeeActivity"
+
+        <activity
+            android:name=".SignUp"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Camera"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".NavActivity"
@@ -66,8 +50,21 @@
             android:theme="@style/AppTheme"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
-        <activity android:name=".testlist" android:launchMode="singleTask"
+        <activity
+            android:name=".GroupActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".EmployeeActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".MapsActivity"
+            android:label="@string/title_activity_maps"/>
+        <activity
+            android:name=".Profile" />
+        <service
+            android:name=".BackgroundGPS"
+            android:exported="false" />
     </application>
 
 </manifest>

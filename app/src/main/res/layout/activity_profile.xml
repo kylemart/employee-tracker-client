@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@color/buttonColor"
-        app:srcCompat="@drawable/c" />
+        app:srcCompat="@drawable/default_profile" />
 
     <LinearLayout
         android:layout_width="match_parent"

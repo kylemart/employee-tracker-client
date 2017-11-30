@@ -13,6 +13,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
@@ -40,15 +41,24 @@ public class GroupActivity extends NavActivity
     /** TextView that is displayed when the list is empty. */
     private TextView emptyStateTextView;
 
+    private List<GroupListItem> groupListItems;
+
     private HashSet<Integer> groups = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_groups);
+
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.activity_groups, contentFrameLayout);
 
+        getGroups();
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(view -> sendToMap());
+    }
+
+    private void getGroups() {
         ListView groupListView = (ListView) findViewById(R.id.groups_list);
 
         emptyStateTextView = (TextView) findViewById(R.id.empty_view);
@@ -74,8 +84,6 @@ public class GroupActivity extends NavActivity
 
                 groups.add(groupId);
             }
-
-            // Create intent and switch to map activity
         });
 
         ConnectivityManager connectivityManager = (ConnectivityManager)
@@ -91,13 +99,11 @@ public class GroupActivity extends NavActivity
             loadingIndicator.setVisibility(View.GONE);
             emptyStateTextView.setText("No internet connection.");
         }
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(view -> sendToMap());
     }
 
     private void sendToMap() {
         Intent intent = new Intent(this, MapsActivity.class);
+        intent.putExtra("group", true);
         intent.putExtra("groups", groups);
 
         startActivity(intent);
@@ -121,11 +127,26 @@ public class GroupActivity extends NavActivity
 
         if (groupListItems != null && !groupListItems.isEmpty()) {
             adapter.addAll(groupListItems);
+
+            this.groupListItems = groupListItems;
         }
     }
 
     @Override
     public void onLoaderReset(Loader<List<GroupListItem>> loader) {
         adapter.clear();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.action_refresh) {
+            groups.clear();
+            adapter.clear();
+            getGroups();
+        }
+
+        return true;
     }
 }

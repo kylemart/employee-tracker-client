@@ -34,7 +34,10 @@ public class EmployeeAdapter extends ArrayAdapter<EmployeeListItem> {
 
         EmployeeListItem currentEmployee = getItem(position);
 
-        listItemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        if(currentEmployee.isHighlighted())
+            listItemView.setBackgroundColor(Color.parseColor("#8585D0"));
+        else
+            listItemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
         TextView groupName = (TextView) listItemView.findViewById(R.id.employee_name);
         groupName.setText(currentEmployee.getFullName());
