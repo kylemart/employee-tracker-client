@@ -81,7 +81,6 @@ public class BackgroundGPS extends Service {
         return START_STICKY;
     }
 
-    // TODO: When DatabaseIO is made, use the method that uploads the location
     // This way the background service doesn't have to worry about who is logged in
 
     private void sendLocation(double lat, double lng) {

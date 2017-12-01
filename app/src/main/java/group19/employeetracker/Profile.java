@@ -59,6 +59,7 @@ public class Profile extends AppCompatActivity
         user = User.getUser(getApplicationContext());
         employee = getIntent().getParcelableExtra("employee");
 
+        // Employee was not passed in properly
         if(employee == null)
         {
             firstName = "First";
@@ -67,6 +68,7 @@ public class Profile extends AppCompatActivity
             publicEmployee = true;
             profilePic = null;
         }
+        // Employee is correctly passed to activity
         else
         {
             firstName = employee.firstName;
@@ -158,8 +160,6 @@ public class Profile extends AppCompatActivity
                         privacyView.setText("Private");
                         employee.setVisibility(false);
                     }
-
-                    //TODO: Send visibility status to database
                 }
             }
         });
