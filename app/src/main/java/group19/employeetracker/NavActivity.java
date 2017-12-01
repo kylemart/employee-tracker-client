@@ -69,9 +69,9 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+
+        if (drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
-        }
     }
 
     @Override
@@ -87,15 +87,12 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    /**
+     * Handles navigating between activities
+     * */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();

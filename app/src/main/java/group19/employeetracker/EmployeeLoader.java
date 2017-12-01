@@ -64,10 +64,11 @@ public class EmployeeLoader extends AsyncTaskLoader<List<EmployeeListItem>> {
 
             for (int i = 0; i < employeeArray.length(); ++i) {
                 JSONObject employee = employeeArray.getJSONObject(i);
+                int id = employee.getInt("id");
                 String firstName = employee.getString("first_name");
                 String lastName = employee.getString("last_name");
 
-                employeeListItems.add(new EmployeeListItem(firstName, lastName));
+                employeeListItems.add(new EmployeeListItem(id, firstName, lastName));
             }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Problem parsing groups from result", e);

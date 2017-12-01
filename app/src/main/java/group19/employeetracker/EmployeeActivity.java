@@ -67,6 +67,7 @@ public class EmployeeActivity extends NavActivity implements LoaderManager.Loade
 
             Intent intent = new Intent(this, MapsActivity.class);
             intent.putExtra("group", false);
+            intent.putExtra("id", clickedEmployee.getId());
             startActivity(intent);
         });
 

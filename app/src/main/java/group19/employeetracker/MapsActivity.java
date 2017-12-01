@@ -137,11 +137,10 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         }
 
         if(!getIntent().getBooleanExtra("group", false))
-            ;
+            employees = getEmployee(getIntent().getIntExtra("id", 0));
         else
             employees = getEmployees();
 
-        // TODO: This permission logic needs to be on the login page
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             if(!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION))
                 ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 34);
@@ -152,6 +151,14 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    private HashSet<Employee> getEmployee(int id) {
+        employees.clear();
+
+        // TODO: get employee based on id
+
+        return employees;
     }
 
     private HashSet<Employee> getEmployees() {
@@ -306,15 +313,14 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         startActivity(intent);
     }
 
-    // TODO: Move this to the login page of the app
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case 34: {
                 if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    // permission denied. TODO: This will have to stop the employee from logging in
+                    // permission denied.
                 }
-                else {// permission was granted. Won't need this in final app
+                else {
                     mMap.setMyLocationEnabled(true);
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(getUserCoords()));
@@ -378,10 +384,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.employeeList) {
-            /*Intent intent = new Intent(getApplicationContext(), employeeList.class);
-            startActivity(intent);*/
-        } else if(id == R.id.action_search) {
+        if(id == R.id.action_search) {
             nextVisibility = !nextVisibility;
             invalidateOptionsMenu();
         } else if(id == R.id.action_next)

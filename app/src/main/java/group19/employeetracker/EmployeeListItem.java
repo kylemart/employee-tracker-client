@@ -5,17 +5,22 @@ package group19.employeetracker;
  */
 
 public class EmployeeListItem {
+    private int id;
 
     private String firstName;
-
     private String lastName;
 
     private boolean highlighted;
 
-    public EmployeeListItem(String firstName, String lastName) {
+    public EmployeeListItem(int id, String firstName, String lastName) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         highlighted = false;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getFirstName() {
