@@ -98,6 +98,10 @@ public class Camera extends AppCompatActivity
         }
     }
 
+    /**
+     * The picture has been saved successfully.
+     * @suthor John Sermarini
+     */
     private void sendSuccessful()
     {
         pictureTaken = false;
