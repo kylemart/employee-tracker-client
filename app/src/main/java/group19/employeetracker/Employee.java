@@ -13,9 +13,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
-//TODO: If you change anything in here make sure to generate parcelable
 // The plugin for this can be found here: https://github.com/mcharmas/android-parcelable-intellij-plugin
 
+/**
+ * Holds information about an employee
+ * @author ryantgraves
+ * */
 public class Employee implements Parcelable
 {
     // The first and last name of the employee

@@ -11,9 +11,12 @@ import java.io.ByteArrayOutputStream;
 
 import static android.content.Context.MODE_PRIVATE;
 
-//TODO: If you change anything in here make sure to generate parcelable
 // The plugin for this can be found here: https://github.com/mcharmas/android-parcelable-intellij-plugin
 
+/**
+ * Holds information on the current user of the app
+ * @author ryantgraves
+ * */
 public class User extends Admin implements Parcelable {
     public boolean isAdmin;
     public String firstName;

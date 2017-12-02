@@ -1,10 +1,8 @@
 package group19.employeetracker;
 
 import android.Manifest;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,32 +11,16 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -53,10 +35,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ * Helper class that assists search filtering
+ * */
 class FilteredMarkers {
     private ArrayList<Marker> filteredMarkers;
     public int size;
@@ -75,6 +59,9 @@ class FilteredMarkers {
     }
 }
 
+/**
+ * Helper class that wraps map markers with employee name
+ * */
 class EmployeeMarker {
     private String fullName;
     private String lastName;
@@ -99,6 +86,10 @@ class EmployeeMarker {
     }
 }
 
+/**
+ * A Google map that shows the locations of employees
+ * @author ryantgraves
+ * */
 @SuppressWarnings("MissingPermission")
 public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoWindowClickListener, OnMapReadyCallback {
     private GoogleMap mMap;
@@ -108,6 +99,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
     // The employees visible to the user
     private HashSet<Employee> employees = new HashSet<>();
 
+    // The ids of the selected groups
     private HashSet<Integer> groupIDs;
 
     // Current set of markers drawn to map
@@ -153,14 +145,48 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         mapFragment.getMapAsync(this);
     }
 
+    /**
+     * Retrieves one employee
+     * */
     private HashSet<Employee> getEmployee(int id) {
         employees.clear();
 
-        // TODO: get employee based on id
+        JSONObject payload = new JSONObject();
+
+        try {
+            payload.put("id", id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new AsyncTask<JSONObject, Void, JSONObject>() {
+            protected JSONObject doInBackground(JSONObject[] params) {
+                return BackendServiceUtil.post("user/" + id, params[0], PrefUtil.getAuth(ctx));
+            }
+            protected void onPostExecute(JSONObject response) {
+                if (response.optBoolean("success")) {
+                    try {
+                        getJEmployee(response.getJSONObject("result"));
+
+                        populateMap(employees);
+                    } catch (JSONException e) {
+                    }
+                } else {
+                    Toast.makeText(
+                            getApplicationContext(),
+                            response.optString("message", "Bad connection :("),
+                            Toast.LENGTH_LONG
+                    ).show();
+                }
+            }
+        }.execute(payload);
 
         return employees;
     }
 
+    /**
+     * Retrieves employees based on the groups chosen
+     * */
     private HashSet<Employee> getEmployees() {
         employees.clear();
 
@@ -187,28 +213,9 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
 
                     try {
                         jEmployees = response.getJSONArray("result");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
 
-                    try {
-                        for (int i = 0; i < jEmployees.length(); ++i) {
-                            JSONObject employee = jEmployees.getJSONObject(i);
-                            String name = employee.getString("first_name") + " " + employee.getString("last_name");
-                            String email = employee.getString("email");
-                            LatLng coords2 = new LatLng(employee.getDouble("lat"), employee.getDouble("lng"));
-
-                            String imgData = employee.getString("profile_img");
-                            if (imgData.length() == 0) {
-                                imgData = Employee.encodePic(BitmapFactory.decodeResource(ctx.getResources(), R.drawable.default_profile));
-                            }
-
-                            Bitmap pic = Employee.decodePic(imgData);
-
-                            employees.add(new Employee(name, email, "Fred", coords2, pic));
-                        }
-
-                        Log.d("Map", employees.toString());
+                        for (int i = 0; i < jEmployees.length(); ++i)
+                            getJEmployee(jEmployees.getJSONObject(i));
 
                         populateMap(employees);
                     } catch (JSONException e) {
@@ -226,6 +233,24 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         return employees;
     }
 
+    private void getJEmployee(JSONObject jEmployee) throws JSONException {
+        String name = jEmployee.getString("first_name") + " " + jEmployee.getString("last_name");
+        String email = jEmployee.getString("email");
+        LatLng coords = new LatLng(jEmployee.optDouble("lat",0), jEmployee.optDouble("lng",0));
+
+        String imgData = jEmployee.getString("profile_img");
+        if (imgData.length() == 0) {
+            imgData = Employee.encodePic(BitmapFactory.decodeResource(ctx.getResources(), R.drawable.default_profile));
+        }
+
+        Bitmap pic = Employee.decodePic(imgData);
+
+        employees.add(new Employee(name, email, "Fred", coords, pic));
+    }
+
+    /**
+     * Gets the user's location as latitude and longitude
+     * */
     public LatLng getUserCoords() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -238,6 +263,9 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         return new LatLng(location.getLatitude(), location.getLongitude());
     }
 
+    /**
+     * Draws markers on the map which coincide with employees
+     * */
     private void populateMap(HashSet<Employee> employees) {
         mMap.clear();
         markers.clear();
@@ -256,6 +284,9 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         }
     }
 
+    /**
+     * Searches the markers on the map for the given query
+     * */
     private ArrayList<Marker> search(String query, HashSet<EmployeeMarker> markers) {
         HashSet<Marker> filteredMarkers = new HashSet<>();
 
@@ -271,6 +302,9 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         return new ArrayList<>(filteredMarkers);
     }
 
+    /**
+     * Moves the map view to center on a filtered marker
+     * */
     private void getNextMarker() {
         if(filteredMarkers == null)
             return;
@@ -283,6 +317,9 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         }
     }
 
+    /**
+     * Centers the map view to the user's location; populates the map with employees
+     * */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -302,7 +339,9 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         populateMap(employees);
     }
 
-    // Sends the employee that was clicked on to the profile activity
+    /**
+     * Sends the employee that was clicked on to the profile activity
+     * */
     @Override
     public void onInfoWindowClick(Marker marker) {
         Employee employee = (Employee) marker.getTag();

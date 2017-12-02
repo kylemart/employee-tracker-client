@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.os.Binder;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -20,13 +18,14 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
+/**
+ * A service that runs in the background to get and upload the user's location to the server
+ * @author ryantgraves
+ * */
 public class BackgroundGPS extends Service {
     private static final String LOG_TAG = BackgroundGPS.class.getSimpleName();
 
@@ -81,9 +80,10 @@ public class BackgroundGPS extends Service {
         return START_STICKY;
     }
 
-    // TODO: When DatabaseIO is made, use the method that uploads the location
-    // This way the background service doesn't have to worry about who is logged in
-
+    /**
+     * Sends the user's location to the server
+     * @author talbotwhite
+     * */
     private void sendLocation(double lat, double lng) {
         Log.d("BACKGROUNDGPS", lat + ", " + lng);
 

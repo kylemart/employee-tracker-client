@@ -16,6 +16,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Navigation container that wraps GroupActivity and EmployeeActivity
+ * @author ryantgraves
+ * */
 public class NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     User user;
     Context ctx;
@@ -70,7 +74,7 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        if (drawer.isDrawerOpen(GravityCompat.START))
+        if(drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
     }
 
